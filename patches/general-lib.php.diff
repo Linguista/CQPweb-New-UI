@@ -1,0 +1,14 @@
+--- a/lib/general-lib.php
++++ b/lib/general-lib.php
+@@ -1233,6 +1233,11 @@
+ 			$extra_headers[] = "Reply-To: {$Config->cqpweb_email_from_address}";
+ 	}
+ 
++	/* cqpweb-new-ui: send through the SMTP server set on the admin page "E-mail", when it is switched on */
++	require_once(__DIR__ . '/cqpweb-new-ui/mail-lib.php');
++	if (cp_mail_smtp_on())
++		return cp_mail_send($address_to, $mail_subject, $mail_content, $extra_headers);
++
+ 	return (bool)mail($address_to, $mail_subject, $mail_content, implode("\r\n", $extra_headers));
+ }
+ 

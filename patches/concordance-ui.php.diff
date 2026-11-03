@@ -1,0 +1,13 @@
+--- a/lib/concordance-ui.php
++++ b/lib/concordance-ui.php
+@@ -105,6 +105,10 @@
+ 		exiterror('The content of the query was not specified!');
+ 	$qdata = prepare_query_string($_GET['qdata'], $qstrat , $_GET['lookupType'] ?? null);
+ 
++	/* cqpweb-new-ui: Case-sensitive box (case-insensitive unless ticked) */
++	require_once('../lib/cqpweb-new-ui/site-lib.php');
++	cp_apply_case_setting($qmode, $qdata);
++
+ 	$case_sensitive = ($qmode === 'sq_nocase' ? false : true);
+ 
+ 	$qscope = QueryScope::new_from_get();

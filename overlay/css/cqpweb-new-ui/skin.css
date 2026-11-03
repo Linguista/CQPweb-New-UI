@@ -1,0 +1,1434 @@
+/*
+ * cqpweb-new-ui skin for CQPweb 3.3.
+ * VERSION 1.0.2
+ *
+ * Loaded after CQPweb's 0system.css. Colors come from --cp-* variables written
+ * into each page by lib/cqpweb-new-ui/appearance-lib.php (day values on :root,
+ * night values on html[data-cp-mode="night"]); fonts from --cp-font-*.
+ * CQPweb's own color variables are re-pointed at the --cp-* ones, so every
+ * part of CQPweb that uses them follows the palette and the day/night switch.
+ */
+
+:root {
+	--colour-layout-fg       : var(--cp-surface);
+	--colour-layout-bg       : var(--cp-surface2);
+	--colour-layout-strong   : var(--cp-strong);
+	--colour-layout-contrast : var(--cp-contrast);
+	--colour-layout-data2    : var(--cp-surface2);
+	--colour-layout-outline  : var(--cp-border);
+	--colour-text-normal     : var(--cp-text);
+	--colour-text-strong     : var(--cp-strong-text);
+	--colour-text-bright     : var(--cp-link);
+	--colour-text-faint      : var(--cp-muted);
+	--colour-tooltip-frame   : var(--cp-border);
+	--colour-tooltip-bg      : var(--cp-surface);
+	--colour-tooltip-text    : var(--cp-text);
+	--font-ui                : var(--cp-font-interface);
+	--font-content           : var(--cp-font-concordance);
+	--boxpad-default         : 0.45rem 0.7rem;
+	--cp-radius              : 12px;
+	--cp-radius-small        : 8px;
+	--cp-bw                  : 3px;
+	--cp-btn-border          : color-mix(in srgb, var(--cp-accent) 62%, #000);
+	color-scheme             : light;
+}
+html[data-cp-mode="night"] {
+	--cp-bw                  : 2px;
+	--cp-btn-border          : color-mix(in srgb, var(--cp-accent) 60%, #fff);
+	color-scheme             : dark;
+}
+
+html {
+	background       : var(--cp-bg);
+	color            : var(--cp-text);
+	font-size        : 100%;
+}
+body {
+	background       : var(--cp-bg);
+	color            : var(--cp-text);
+	font-family      : var(--cp-font-interface);
+	line-height      : 1.45;
+	margin           : 0;
+	padding          : 0 1rem 1rem;
+}
+body * {
+	line-height      : inherit;
+}
+h1, h2, h3, h4 {
+	font-family      : var(--cp-font-headings);
+	color            : var(--cp-text);
+	line-height      : 1.2;
+}
+a, a:visited {
+	color            : var(--cp-link);
+}
+a:hover {
+	color            : var(--cp-text);
+}
+:focus-visible {
+	outline          : 3px solid var(--cp-accent);
+	outline-offset   : 2px;
+}
+pre, code {
+	font-family      : var(--cp-font-concordance);
+}
+hr {
+	border           : 0;
+	border-top       : 1px solid var(--cp-border);
+	margin           : 1.25rem 0 0.75rem;
+}
+
+
+/* ===================== top bar ===================== */
+
+header.cp-topbar {
+	display          : flex;
+	flex-wrap        : wrap;
+	align-items      : center;
+	justify-content  : space-between;
+	gap              : 0.5rem 1rem;
+	margin           : 0 -1rem 1rem;
+	padding          : 0.55rem 1rem;
+	background       : var(--cp-nav);
+	color            : var(--cp-nav-text);
+	font-family      : var(--cp-font-menus);
+	position         : sticky;
+	top              : 0;
+	z-index          : 50;
+}
+.cp-topbar-left, .cp-topbar-right {
+	display          : flex;
+	flex-wrap        : wrap;
+	align-items      : center;
+	gap              : 0.4rem;
+}
+header.cp-topbar a {
+	color            : var(--cp-nav-text);
+	text-decoration  : none;
+}
+.cp-brand {
+	margin-right     : 0.6rem;
+	display          : inline-flex;
+	align-items      : baseline;
+}
+.cp-brand-name {
+	font-family      : var(--cp-font-headings);
+	font-weight      : 700;
+	font-size        : 1.35rem;
+	letter-spacing   : 0.01em;
+}
+img.cp-brand-logo {
+	height           : 2rem;
+	width            : auto;
+	max-width        : 14rem;
+	align-self       : center;
+	margin-right     : 0.5rem;
+}
+.cp-brand-dot {
+	color            : var(--cp-hit);
+}
+.cp-navbtn {
+	display          : inline-flex;
+	align-items      : center;
+	gap              : 0.35rem;
+	min-height       : 36px;
+	padding          : 0 0.85rem;
+	border-radius    : 999px;
+	border           : var(--cp-bw) solid color-mix(in srgb, var(--cp-nav-text) 35%, transparent);
+	font-size        : 0.92rem;
+	font-weight      : 500;
+}
+.cp-navbtn:hover {
+	background       : color-mix(in srgb, var(--cp-nav-text) 14%, transparent);
+}
+.cp-navbtn-corpus {
+	background       : var(--cp-accent);
+	color            : var(--cp-accent-text) !important;
+	border-color     : var(--cp-accent);
+	font-weight      : 600;
+}
+html[data-cp-mode="night"] .cp-navbtn-corpus {
+	background       : var(--cp-link);
+	border-color     : var(--cp-link);
+	color            : var(--cp-nav) !important;
+}
+.cp-navbtn-corpus:hover {
+	filter           : brightness(1.08);
+}
+.cp-navlink {
+	display          : inline-flex;
+	align-items      : center;
+	min-height       : 36px;
+	padding          : 0 0.6rem;
+	border-radius    : 8px;
+	font-size        : 0.92rem;
+}
+.cp-navlink:hover {
+	background       : color-mix(in srgb, var(--cp-nav-text) 14%, transparent);
+}
+button.cp-mode {
+	width            : 38px;
+	height           : 38px;
+	display          : inline-flex;
+	align-items      : center;
+	justify-content  : center;
+	border-radius    : 10px;
+	border           : var(--cp-bw) solid color-mix(in srgb, var(--cp-nav-text) 35%, transparent);
+	background       : transparent;
+	color            : var(--cp-nav-text);
+	cursor           : pointer;
+	padding          : 0;
+}
+button.cp-mode:hover {
+	background       : color-mix(in srgb, var(--cp-nav-text) 14%, transparent);
+}
+.cp-icon-sun { display: none; }
+html[data-cp-mode="night"] .cp-icon-sun { display: block; }
+html[data-cp-mode="night"] .cp-icon-moon { display: none; }
+
+
+/* ===================== frames, title bars, cells ===================== */
+
+table.layout-frame {
+	border           : var(--cp-bw) solid var(--cp-border);
+	border-radius    : var(--cp-radius);
+	border-collapse  : separate;
+	border-spacing   : 0;
+	overflow         : hidden;
+	background       : var(--cp-surface);
+	margin-bottom    : 0.9rem;
+}
+table.layout-frame table.layout-frame {
+	margin-bottom    : 0;
+}
+th.layout-strong {
+	background       : var(--cp-strong);
+	color            : var(--cp-strong-text);
+	font-family      : var(--cp-font-headings);
+	font-size        : 1.12rem;
+	font-weight      : 600;
+	padding          : 0.6rem 0.9rem;
+	border           : 0;
+	border-bottom    : 1px solid var(--cp-border);
+	letter-spacing   : 0.005em;
+}
+td.layout-fg, td.layout-bg, td.layout-contrast, td.basicbox, td.tightbox {
+	border           : 0;
+	border-bottom    : 1px solid var(--cp-border);
+	font-family      : var(--cp-font-data);
+	font-size        : 0.92rem;
+	color            : var(--cp-text);
+}
+td.basicbox, td.tightbox {
+	border-bottom    : 0;
+}
+td.layout-fg, td.basicbox, td.tightbox {
+	background       : var(--cp-surface);
+}
+td.layout-bg {
+	background       : var(--cp-surface2);
+}
+td.layout-contrast {
+	background       : var(--cp-contrast);
+}
+td.layout-fg, td.layout-bg, td.layout-contrast {
+	padding          : 0.5rem 0.75rem;
+}
+tr:last-child > td.layout-fg, tr:last-child > td.layout-bg, tr:last-child > td.layout-contrast {
+	border-bottom    : 0;
+}
+td.hollow {
+	padding          : 0;
+}
+td.braindead-pager {
+	height           : 2.6rem;
+}
+.footbox {
+	background       : transparent;
+	border           : 0;
+	color            : var(--cp-muted);
+	font-family      : var(--cp-font-interface);
+	font-size        : 0.78rem;
+	padding          : 0.3rem 0.5rem 1.5rem;
+}
+footer table.layout-frame {
+	border           : 0;
+	background       : transparent;
+}
+a.copynote:link, a.copynote:visited {
+	color            : var(--cp-muted);
+}
+a.copynote:hover {
+	color            : var(--cp-link);
+}
+p.errormessage, p.instruction, p.helpnote, p.bigbold {
+	font-family      : var(--cp-font-interface);
+}
+p.instruction, p.helpnote {
+	font-size        : 0.9rem;
+	color            : var(--cp-text);
+}
+span.time-report {
+	background       : transparent;
+	color            : var(--cp-muted);
+}
+
+
+/* ===================== controls ===================== */
+
+a[class*=control-] {
+	color            : var(--cp-link);
+}
+a.control-box {
+	border-radius    : var(--cp-radius-small);
+	padding          : 0.65rem 0.8rem;
+}
+a.control-inline:hover, a.control-inline:active, a.control-box:hover, a.control-box:active,
+a.control-info:hover {
+	background       : var(--cp-surface2);
+	color            : var(--cp-text);
+}
+a.link {
+	color            : var(--cp-link);
+	text-decoration-color: var(--cp-link);
+}
+a.external::after {
+	content          : "\2197";
+	display          : inline-block;
+	margin-left      : 0.15em;
+	font-size        : 0.8em;
+	text-decoration  : none;
+}
+
+button, input[type="submit"], input[type="button"], input[type="reset"] {
+	font-family      : var(--cp-font-interface);
+	font-size        : 0.92rem;
+	font-weight      : 600;
+	min-height       : 36px;
+	padding          : 0.35rem 0.95rem;
+	border-radius    : var(--cp-radius-small);
+	border           : var(--cp-bw) solid var(--cp-btn-border);
+	background       : var(--cp-accent);
+	color            : var(--cp-accent-text);
+	cursor           : pointer;
+}
+button:hover, input[type="submit"]:hover, input[type="button"]:hover {
+	filter           : brightness(1.08);
+}
+button[type="reset"], input[type="reset"] {
+	background       : var(--cp-surface);
+	color            : var(--cp-text);
+	border-color     : var(--cp-border);
+}
+button:disabled, input:disabled {
+	opacity          : 0.5;
+	cursor           : not-allowed;
+}
+input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], input[type="date"],
+input[type="url"], input:not([type]), select, textarea {
+	font-family      : var(--cp-font-interface);
+	font-size        : 0.95rem;
+	color            : var(--cp-text);
+	background       : var(--cp-surface);
+	border           : var(--cp-bw) solid var(--cp-border);
+	border-radius    : var(--cp-radius-small);
+	padding          : 0.35rem 0.55rem;
+	min-height       : 34px;
+	box-sizing       : border-box;
+}
+select {
+	padding-right    : 1.6rem;
+}
+textarea {
+	font-family      : var(--cp-font-concordance);
+	font-size        : 1.05rem;
+	line-height      : 1.45;
+	padding          : 0.6rem 0.75rem;
+}
+input:focus, select:focus, textarea:focus {
+	border-color     : var(--cp-accent);
+	outline          : 2px solid color-mix(in srgb, var(--cp-accent) 45%, transparent);
+	outline-offset   : 0;
+}
+input[type="radio"], input[type="checkbox"] {
+	accent-color     : var(--cp-accent);
+	width            : 1.05rem;
+	height           : 1.05rem;
+	vertical-align   : middle;
+}
+
+
+/* ===================== page layout ===================== */
+
+/* the outer table that holds the left menu and the page is layout only, not a card */
+body > table.layout-frame:has(> tbody > tr > td.minwidth > nav) {
+	border           : 0;
+	border-radius    : 0;
+	background       : transparent;
+	overflow         : visible;
+}
+body > table.layout-frame:has(> tbody > tr > td.minwidth > nav) > tbody > tr > td {
+	vertical-align   : top;
+}
+
+/* wide tables scroll sideways inside the page instead of widening it (wrapper added by appearance.js) */
+div.cp-scroll {
+	overflow-x       : auto;
+	-webkit-overflow-scrolling: touch;
+	max-width        : 100%;
+	margin-bottom    : 0.9rem;
+	border-radius    : var(--cp-radius);
+}
+div.cp-scroll > table.layout-frame {
+	margin-bottom    : 0;
+}
+
+/* ===================== left menu ===================== */
+
+td.minwidth:has(> nav) {
+	background       : var(--cp-sidebar);
+	border-radius    : var(--cp-radius);
+	padding          : 0.6rem 0.5rem 0.9rem;
+	vertical-align   : top;
+}
+td.minwidth:has(> nav) + td {
+	padding-left     : 1rem;
+}
+nav {
+	width            : 15rem;
+	border           : 0;
+	background       : transparent;
+	font-family      : var(--cp-font-menus);
+}
+/* link chips: a little lighter than the menu; category chips (headers): darker, with a border */
+td.minwidth:has(> nav) {
+	--cp-chip        : color-mix(in srgb, var(--cp-sidebar) 88%, #ffffff);
+	--cp-chip-hover  : color-mix(in srgb, var(--cp-sidebar) 78%, #ffffff);
+	--cp-chip-head   : color-mix(in srgb, var(--cp-sidebar) 78%, #000000);
+	--cp-chip-border : color-mix(in srgb, var(--cp-sidebar-text) 40%, var(--cp-sidebar));
+}
+html[data-cp-mode="night"] td.minwidth:has(> nav) {
+	--cp-chip        : color-mix(in srgb, var(--cp-sidebar) 90%, #ffffff);
+	--cp-chip-hover  : color-mix(in srgb, var(--cp-sidebar) 82%, #ffffff);
+	--cp-chip-head   : color-mix(in srgb, var(--cp-sidebar) 55%, #000000);
+}
+a.menuItem, a.menuItem:link, a.menuItem:visited {
+	background       : var(--cp-chip, transparent);
+	color            : var(--cp-sidebar-text);
+	border           : 0;
+	border-radius    : var(--cp-radius-small);
+	padding          : 0.42rem 0.7rem;
+	margin           : 3px 0;
+	font-family      : var(--cp-font-menus);
+	font-size        : 0.9rem;
+	white-space      : normal;
+}
+a.menuItem:hover, a.menuItem:active {
+	background       : var(--cp-chip-hover, transparent);
+	color            : var(--cp-sidebar-text);
+	text-decoration  : none;
+}
+a.menuItem.current {
+	background       : var(--cp-accent);
+	color            : var(--cp-accent-text);
+	font-weight      : 600;
+}
+html[data-cp-mode="night"] a.menuItem.current {
+	background       : var(--cp-link);
+	color            : var(--cp-sidebar);
+}
+a.menuItem.header, a.menuItem.header:hover {
+	background       : var(--cp-chip-head, transparent);
+	color            : var(--cp-sidebar-text);
+	border           : var(--cp-bw) solid var(--cp-chip-border, transparent);
+	text-align       : left;
+	font-family      : var(--cp-font-menus);
+	font-size        : 0.72rem;
+	font-weight      : 700;
+	letter-spacing   : 0.09em;
+	text-transform   : uppercase;
+	padding          : 0.4rem 0.7rem;
+	margin           : 0.9rem 0 4px;
+	cursor           : default;
+}
+a.menuItem.current:has(> em) {
+	background       : var(--cp-chip, transparent);
+	color            : var(--cp-sidebar-text);
+	opacity          : 0.6;
+	font-weight      : 400;
+}
+nav:first-of-type a.menuItem.header {
+	background       : transparent;
+	border-color     : transparent;
+	margin-top       : 0;
+	font-family      : var(--cp-font-headings);
+	font-size        : 1.15rem;
+	letter-spacing   : 0;
+	text-transform   : none;
+	opacity          : 1;
+	padding-top      : 0.3rem;
+}
+
+
+/* ===================== concordance ===================== */
+
+td.kwic, td.lineview, td.text_id, td.conc_ln, td.parallel-line, td.parallel-kwic {
+	background       : var(--cp-surface);
+	border           : 0;
+	border-bottom    : 1px solid var(--cp-border);
+	padding          : 0.42rem 0.55rem;
+	font-family      : var(--cp-font-concordance);
+	font-size        : 0.93rem;
+	color            : var(--cp-text);
+}
+td.kwic.node {
+	background       : var(--cp-surface2);
+}
+td.text_id, td.conc_ln {
+	font-family      : var(--cp-font-data);
+	font-size        : 0.85rem;
+}
+td.conc_ln {
+	color            : var(--cp-muted);
+}
+tr:hover > td.kwic, tr:hover > td.lineview, tr:hover > td.text_id, tr:hover > td.conc_ln {
+	background       : var(--cp-surface2);
+}
+span.hit, td.kwic.node a, td.lineview b {
+	color            : var(--cp-link);
+}
+td.kwic.node a, span.hit {
+	background       : var(--cp-hit);
+	color            : var(--cp-hit-text);
+	border-radius    : 4px;
+	padding          : 0 0.2em;
+	font-weight      : 700;
+	text-decoration  : none;
+}
+div.node {
+	font-weight      : 700;
+}
+
+
+/* ===================== word clouds, tooltips, popups ===================== */
+
+a.wordcloudQuery, a.wordcloudQuery:visited {
+	font-family      : var(--cp-font-interface);
+	color            : var(--cp-link);
+}
+a.wordcloudQuery:hover {
+	color            : var(--cp-text);
+}
+div.floatingToolTip {
+	border-radius    : 10px;
+	box-shadow       : 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+td.floatingToolTipTarget {
+	font-family      : var(--cp-font-interface);
+	font-size        : 0.82rem;
+	padding          : 0.45rem 0.6rem;
+	border-radius    : 8px;
+}
+.greyout-content {
+	background       : var(--cp-surface);
+	border-radius    : var(--cp-radius);
+	padding          : 1rem;
+}
+
+
+/* ===================== logos ===================== */
+
+/* logos of dark artwork on a transparent background: in night mode they are inverted
+ * (and hue-rotated back, so colors keep their hue). The site's own logo only when the
+ * Personalization page says so (class cp-logo-invert). */
+html[data-cp-mode="night"] img.cp-logo-invert,
+html[data-cp-mode="night"] img[src*="cwb-logo"],
+html[data-cp-mode="night"] img[src*="ocwb-logo"] {
+	filter           : invert(1) hue-rotate(180deg);
+}
+textarea, input[type="text"] {
+	max-width        : 100%;
+}
+
+/* ===================== small screens ===================== */
+
+/* the left menu folds away behind a "Menu" button (added by appearance.js) */
+button.cp-menu-toggle {
+	display          : none;
+}
+
+@media (max-width: 760px) {
+	header.cp-topbar {
+		padding          : 0.4rem 0.6rem;
+		gap              : 0.35rem;
+	}
+	.cp-brand-name {
+		font-size        : 1.15rem;
+	}
+	.cp-navbtn, .cp-navlink {
+		min-height       : 32px;
+		font-size        : 0.85rem;
+		padding          : 0 0.6rem;
+	}
+	button.cp-mode {
+		width            : 32px;
+		height           : 32px;
+	}
+	button.cp-menu-toggle {
+		display          : flex;
+		width            : 100%;
+		justify-content  : space-between;
+		align-items      : center;
+		background       : transparent;
+		color            : var(--cp-sidebar-text);
+		border           : 0;
+		font-family      : var(--cp-font-headings);
+		font-size        : 1.1rem;
+	}
+	td.cp-sidebar:not(.cp-open) > nav {
+		display          : none;
+	}
+	td.minwidth:has(> nav) {
+		padding          : 0.3rem 0.4rem;
+	}
+	td.cp-sidebar.cp-open {
+		padding-bottom   : 0.8rem;
+	}
+	/* layout tables (no column headings) stack their cells; data tables keep their columns and scroll */
+	table:not(.cp-embed table):not(:has(> tbody > tr > th + th)):not(:has(> tbody > tr > td.kwic, > tbody > tr > td.lineview, > tbody > tr > td.hollow)) > tbody > tr > td,
+	table:not(.cp-embed table):not(:has(> tbody > tr > th + th)):not(:has(> tbody > tr > td.kwic, > tbody > tr > td.lineview, > tbody > tr > td.hollow)) > tbody > tr > th {
+		display          : block;
+		width            : auto !important;
+		box-sizing       : border-box;
+	}
+	/* rows of control buttons (page navigation, actions) wrap instead of stacking */
+	table:has(> tbody > tr > td.hollow) > tbody > tr {
+		display          : flex;
+		flex-wrap        : wrap;
+		align-items      : center;
+	}
+	table:has(> tbody > tr > td.hollow) > tbody > tr > td {
+		display          : block;
+		width            : auto !important;
+		flex             : 1 1 auto;
+		border-bottom    : 0;
+	}
+	th.layout-strong p[style*="font-size"] {
+		font-size        : 1.4rem !important;
+		line-height      : 1.2 !important;
+	}
+	th.layout-strong {
+		font-size        : 1rem;
+	}
+	th.layout-strong img {
+		max-height       : 3.2rem;
+		width            : auto;
+	}
+	select {
+		max-width        : 100%;
+	}
+	textarea {
+		width            : 100% !important;
+	}
+	body > table.layout-frame:has(> tbody > tr > td.minwidth > nav),
+	body > table.layout-frame:has(> tbody > tr > td.minwidth > nav) > tbody,
+	body > table.layout-frame:has(> tbody > tr > td.minwidth > nav) > tbody > tr {
+		display          : block;
+		width            : 100%;
+	}
+	div.cp-scroll {
+		max-width        : calc(100vw - 1rem);
+	}
+}
+@media (max-width: 760px) {
+	body {
+		padding          : 0 0.5rem 1rem;
+	}
+	header.cp-topbar {
+		margin           : 0 -0.5rem 0.75rem;
+		position         : static;
+	}
+	nav {
+		width            : auto;
+	}
+	td.minwidth:has(> nav) {
+		display          : block;
+		width            : auto;
+	}
+	td.minwidth:has(> nav) + td {
+		display          : block;
+		padding-left     : 0;
+		margin-top       : 0.75rem;
+	}
+}
+
+
+/* ===================== home page (lib/cqpweb-new-ui/home-ui.php) ===================== */
+
+main.cp-home {
+	max-width        : 72rem;
+	margin           : 0 auto 1.5rem;
+	display          : flex;
+	flex-direction   : column;
+	gap              : 1.25rem;
+}
+.cp-hero {
+	display          : flex;
+	flex-wrap        : wrap;
+	align-items      : center;
+	gap              : 1rem 2.5rem;
+	padding          : 1.4rem 1.6rem;
+	background       : var(--cp-surface);
+	border           : var(--cp-bw) solid var(--cp-border);
+	border-radius    : 18px;
+}
+img.cp-home-logo {
+	height           : 7.5rem;
+	width            : auto;
+	max-width        : 100%;
+}
+.cp-hero-text {
+	flex             : 1 1 18rem;
+	font-family      : var(--cp-font-headings);
+	font-size        : 1.15rem;
+	color            : var(--cp-muted);
+}
+.cp-hero-text p[style] {
+	font-size        : 2.2rem !important;
+	line-height      : 1.15 !important;
+	color            : var(--cp-text);
+	margin           : 0 0 0.3rem !important;
+	font-weight      : 600;
+}
+.cp-hero-text br {
+	display          : none;
+}
+.cp-hero-text p.cp-welcome-big {
+	font-size        : 2.2rem;
+	line-height      : 1.15;
+	color            : var(--cp-text);
+	margin           : 0 0 0.3rem;
+	font-weight      : 600;
+}
+
+/* ===================== site footer and Help page (lib/cqpweb-new-ui/brand-lib.php, help-ui.php) ===================== */
+
+footer.cp-footer {
+	max-width        : 72rem;
+	margin           : 0 auto 1.5rem;
+	padding          : 0.6rem 1rem 0;
+	text-align       : center;
+	color            : var(--cp-muted);
+	font-family      : var(--cp-font-interface);
+	font-size        : 0.85rem;
+	border-top       : 1px solid var(--cp-border);
+}
+footer.cp-footer .cp-footer-text {
+	margin-bottom    : 0.4rem;
+}
+footer.cp-footer a {
+	color            : var(--cp-link);
+}
+footer.cp-footer nav.cp-footer-links {
+	/* CQPweb gives every nav the width of its side menu */
+	width            : auto;
+	float            : none;
+	margin           : 0;
+	text-align       : center;
+}
+nav.cp-footer-links a {
+	font-weight      : 600;
+}
+ul.cp-help-list {
+	list-style       : none;
+	margin           : 0;
+	padding          : 0;
+	display          : grid;
+	grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+	gap              : 1rem;
+}
+li.cp-help-item {
+	background       : var(--cp-surface);
+	border           : var(--cp-bw) solid var(--cp-border);
+	border-radius    : 14px;
+	padding          : 1rem 1.2rem;
+}
+a.cp-help-title {
+	font-family      : var(--cp-font-headings);
+	font-size        : 1.15rem;
+	font-weight      : 600;
+	color            : var(--cp-link);
+}
+p.cp-help-desc {
+	margin           : 0.4rem 0 0;
+	color            : var(--cp-muted);
+}
+.cp-home-h2 {
+	font-size        : 1.5rem;
+	font-weight      : 600;
+	margin           : 0 0 0.7rem;
+}
+.cp-home-box {
+	background       : var(--cp-surface);
+	border           : var(--cp-bw) solid var(--cp-border);
+	border-radius    : 18px;
+	padding          : 1.1rem 1.4rem;
+}
+.cp-home-greeting {
+	font-family      : var(--cp-font-headings);
+	font-size        : 1.35rem;
+	margin           : 0 0 0.7rem;
+}
+.cp-home-note {
+	margin           : 0 0 0.6rem;
+	color            : var(--cp-muted);
+}
+.cp-home-login table.basicbox {
+	margin           : 0 !important;
+}
+.cp-home-login td.basicbox {
+	background       : transparent;
+	padding          : 0.35rem 0.6rem 0.35rem 0;
+}
+.cp-home-links {
+	display          : flex;
+	flex-wrap        : wrap;
+	align-items      : center;
+	gap              : 0.5rem;
+	margin-top       : 0.6rem;
+}
+a.cp-home-link, a.cp-home-link:visited {
+	display          : inline-flex;
+	align-items      : center;
+	min-height       : 40px;
+	padding          : 0 1rem;
+	border-radius    : 10px;
+	border           : var(--cp-bw) solid var(--cp-border);
+	background       : var(--cp-surface2);
+	color            : var(--cp-text);
+	text-decoration  : none;
+	font-weight      : 500;
+}
+a.cp-home-link:hover {
+	border-color     : var(--cp-accent);
+}
+a.cp-home-quiet, a.cp-home-quiet:visited {
+	background       : transparent;
+}
+a.cp-home-cta, a.cp-home-cta:visited {
+	display          : inline-flex;
+	align-items      : center;
+	min-height       : 44px;
+	padding          : 0 1.3rem;
+	border-radius    : 10px;
+	background       : var(--cp-accent);
+	color            : var(--cp-accent-text);
+	font-weight      : 700;
+	text-decoration  : none;
+}
+a.cp-home-cta:hover {
+	filter           : brightness(1.08);
+}
+.cp-cards {
+	display          : grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+	gap              : 1rem;
+}
+article.cp-card {
+	display          : flex;
+	flex-direction   : column;
+	background       : var(--cp-surface);
+	border           : var(--cp-bw) solid var(--cp-border);
+	border-radius    : 16px;
+	overflow         : hidden;
+}
+a.cp-card-band, a.cp-card-band:visited {
+	display          : flex;
+	align-items      : center;
+	justify-content  : space-between;
+	gap              : 0.5rem;
+	padding          : 1rem 1.2rem;
+	background       : var(--cd-band);
+	color            : var(--cd-band-text);
+	text-decoration  : none;
+}
+html[data-cp-mode="night"] a.cp-card-band {
+	background       : var(--cn-band);
+	color            : var(--cn-band-text);
+}
+.cp-card-short {
+	font-family      : var(--cp-font-headings);
+	font-size        : 1.8rem;
+	font-weight      : 700;
+	letter-spacing   : 0.02em;
+}
+.cp-card-tag {
+	font-size        : 0.75rem;
+	font-weight      : 700;
+	padding          : 0.2rem 0.6rem;
+	border-radius    : 999px;
+	border           : 1px solid currentColor;
+}
+.cp-card-body {
+	padding          : 0.9rem 1.2rem 1.1rem;
+	display          : flex;
+	flex-direction   : column;
+	gap              : 0.4rem;
+	flex             : 1;
+}
+.cp-card-body p {
+	margin           : 0;
+}
+.cp-card-title {
+	font-weight      : 500;
+}
+.cp-card-facts {
+	color            : var(--cp-muted);
+	font-family      : var(--cp-font-data);
+	font-size        : 0.9rem;
+}
+.cp-card-actions {
+	margin-top       : auto;
+	padding-top      : 0.5rem;
+	display          : flex;
+	flex-wrap        : wrap;
+	gap              : 0.5rem 1rem;
+	align-items      : center;
+}
+a.cp-card-open, a.cp-card-open:visited {
+	display          : inline-flex;
+	align-items      : center;
+	min-height       : 40px;
+	padding          : 0 1.1rem;
+	border-radius    : 10px;
+	background       : var(--cd-btn);
+	color            : var(--cd-btn-text);
+	font-weight      : 700;
+	text-decoration  : none;
+}
+html[data-cp-mode="night"] a.cp-card-open {
+	background       : var(--cn-btn);
+	color            : var(--cn-btn-text);
+}
+.cp-credit {
+	display          : flex;
+	align-items      : center;
+	justify-content  : center;
+	gap              : 0.6rem;
+	color            : var(--cp-muted);
+	font-size        : 0.88rem;
+	margin           : 0.5rem 0 0;
+}
+.cp-credit img {
+	height           : 30px;
+	width            : auto;
+}
+html[data-cp-mode="night"] .cp-credit img {
+	filter           : invert(1) hue-rotate(180deg);
+}
+
+
+/* ===================== site rules (lib/cqpweb-new-ui/site-lib.php) ===================== */
+
+.cp-banner {
+	margin           : -0.5rem 0 1rem;
+	padding          : 0.6rem 1rem;
+	border-radius    : 10px;
+	background       : var(--cp-contrast);
+	color            : var(--cp-text);
+	font-weight      : 600;
+	border           : var(--cp-bw) solid var(--cp-border);
+}
+td.cp-signup-notice {
+	font-size        : 1rem;
+	padding          : 0.8rem 1rem;
+}
+.cp-case {
+	display          : inline-flex;
+	align-items      : center;
+	gap              : 0.4rem;
+	margin-left      : 0.8rem;
+	font-weight      : 600;
+	white-space      : nowrap;
+}
+.cp-case-hint {
+	display          : block;
+	margin-top       : 0.35rem;
+	font-size        : 0.85rem;
+	color            : var(--cp-muted);
+}
+ul.cp-pwrule {
+	list-style       : none;
+	margin           : 0.4rem 0 0;
+	padding          : 0;
+	font-size        : 0.88rem;
+}
+ul.cp-pwrule li::before {
+	content          : "\2717";
+	display          : inline-block;
+	width            : 1.3em;
+	color            : var(--cp-muted);
+}
+ul.cp-pwrule li.cp-ok {
+	color            : var(--cp-text);
+}
+ul.cp-pwrule li.cp-ok::before {
+	content          : "\2713";
+	color            : var(--cp-link);
+	font-weight      : 700;
+}
+ul.cp-pwrule li:not(.cp-ok) {
+	color            : var(--cp-muted);
+}
+.cpa-stack {
+	flex-direction   : column;
+	align-items      : stretch;
+}
+.cpa-stack textarea {
+	width            : 100%;
+	font-family      : var(--cp-font-interface);
+	font-size        : 0.95rem;
+}
+
+
+/* ===================== embedded pages: tutorials, documentation (lib/cqpweb-new-ui/embed-lib.php) ===================== */
+
+td.layout-fg:has(> .cp-embed) {
+	padding          : 1.2rem 1.6rem;
+}
+.cp-embed {
+	max-width        : 62rem;
+	line-height      : 1.6;
+	overflow-wrap    : anywhere;
+	overflow-x       : auto;
+}
+.cp-embed h1, .cp-embed h2, .cp-embed h3, .cp-embed h4 {
+	font-family      : var(--cp-font-headings, inherit);
+	line-height      : 1.25;
+	margin           : 1.6em 0 0.5em;
+	scroll-margin-top: 4.5rem;
+}
+.cp-embed h1 { font-size: 1.9rem; margin-top: 0.3em; }
+.cp-embed h2 { font-size: 1.45rem; border-bottom: 1px solid var(--cp-border); padding-bottom: 0.2em; }
+.cp-embed h3 { font-size: 1.2rem; }
+.cp-embed [id], .cp-embed a[name] {
+	scroll-margin-top: 4.5rem;
+}
+.cp-embed table {
+	width            : auto !important;
+	max-width        : 100%;
+	border-collapse  : collapse;
+	margin           : 0.6rem 0 1rem;
+}
+.cp-embed td, .cp-embed th {
+	padding          : 0.3rem 0.8rem 0.3rem 0;
+	vertical-align   : top;
+	border-bottom    : 1px solid var(--cp-border);
+}
+.cp-embed img {
+	max-width        : 100%;
+	height           : auto;
+}
+.cp-embed br + br + br {
+	display          : none;
+}
+
+/* the color classes used in the old tutorial and documentation pages: code in a monospace font, in strong colors */
+.cp-embed {
+	--e-black  : var(--cp-text);
+	--e-red    : #d40000;
+	--e-blue   : #0039e6;
+	--e-green  : #008a1c;
+	--e-purple : #8000e0;
+	--e-magenta: #c400b8;
+	--e-orange : #d65f00;
+	--e-grey   : #666666;
+	--e-mono   : "CP Noto Sans Mono", "DejaVu Sans Mono", Consolas, ui-monospace, monospace;
+}
+html[data-cp-mode="night"] .cp-embed {
+	--e-red    : #ff5c5c;
+	--e-blue   : #5c9dff;
+	--e-green  : #3ee06a;
+	--e-purple : #c27dff;
+	--e-magenta: #ff6bef;
+	--e-orange : #ff9a3c;
+	--e-grey   : #b5b5b5;
+}
+.cp-embed [class*="Mono-"], .cp-embed .H3-Red, .cp-embed .Estilo4, .cp-embed .Estilo7 {
+	font-family      : var(--e-mono) !important;
+	font-size        : 0.95em;
+}
+.cp-embed .Mono-Red, .cp-embed .Mono-Blue, .cp-embed .Mono-Green, .cp-embed .Mono-Purple,
+.cp-embed .Mono-Magenta, .cp-embed .Mono-Orange, .cp-embed .Mono-Black,
+.cp-embed .Default-Red, .cp-embed .Default-Blue, .cp-embed .Default-Green, .cp-embed .Default-Purple {
+	font-weight      : 700 !important;
+}
+.cp-embed .Mono-Black, .cp-embed .Mono-NoBold-Black, .cp-embed .Mono-Black-Italics { color: var(--e-black) !important; }
+.cp-embed .Mono-Red, .cp-embed .Default-Red, .cp-embed .H3-Red, .cp-embed .Estilo1 { color: var(--e-red) !important; }
+.cp-embed .Mono-Blue, .cp-embed .Default-Blue, .cp-embed .Estilo5 { color: var(--e-blue) !important; }
+.cp-embed .Mono-Green, .cp-embed .Default-Green { color: var(--e-green) !important; }
+.cp-embed .Mono-Purple, .cp-embed .Default-Purple { color: var(--e-purple) !important; }
+.cp-embed .Mono-Magenta { color: var(--e-magenta) !important; }
+.cp-embed .Mono-Orange { color: var(--e-orange) !important; }
+.cp-embed .Estilo9, .cp-embed .Estilo10, .cp-embed .Estilo12, .cp-embed .Estilo13, .cp-embed .Estilo14 { color: var(--e-grey) !important; }
+/* anything else colored by an old page: keep it readable at night */
+html[data-cp-mode="night"] .cp-embed font[color] { color: var(--cp-text) !important; }
+
+@media (max-width: 760px) {
+	td.layout-fg:has(> .cp-embed) { padding: 0.8rem; }
+	.cp-embed h1 { font-size: 1.5rem; }
+}
+
+/* tutorials: the box on the query form (CQP syntax) and the page title row */
+.cp-tut-callout {
+	margin           : 0 0 1rem;
+	padding          : 0.8rem 1rem;
+	border-radius    : 12px;
+	background       : var(--cp-contrast);
+	border           : var(--cp-bw) solid var(--cp-border);
+	color            : var(--cp-text);
+}
+.cp-tut-callout p {
+	margin           : 0 0 0.5rem;
+}
+.cp-tut-links {
+	display          : flex;
+	flex-wrap        : wrap;
+	gap              : 0.5rem;
+	margin-bottom    : 0 !important;
+}
+.cp-tut-other {
+	float            : right;
+	font-weight      : normal;
+	font-size        : 0.9rem;
+}
+.cp-tut-callout[hidden] {
+	display          : none !important;
+}
+
+/* documentation pages: data tables, word-class colors in sample texts, notes */
+.cp-embed table.cp-data {
+	border-collapse  : collapse;
+	margin           : 0.5rem 0 1.2rem;
+	font-size        : 0.92rem;
+}
+.cp-embed table.cp-data th {
+	text-align       : left;
+	padding          : 0.35rem 0.9rem 0.35rem 0;
+	border-bottom    : 2px solid var(--cp-border);
+	font-weight      : 700;
+}
+.cp-embed table.cp-data td {
+	padding          : 0.25rem 0.9rem 0.25rem 0;
+}
+.cp-embed table.cp-data .num {
+	text-align       : right;
+	font-variant-numeric : tabular-nums;
+	white-space      : nowrap;
+}
+.cp-embed table.cp-data tr.cp-total td {
+	font-weight      : 700;
+	border-top       : 2px solid var(--cp-border);
+}
+.cp-embed details {
+	margin           : 0.4rem 0 1.2rem;
+}
+.cp-embed details > summary {
+	cursor           : pointer;
+	font-weight      : 600;
+	color            : var(--cp-link);
+}
+.cp-embed .cp-note {
+	margin           : 1.5rem 0;
+	padding          : 0.8rem 1rem;
+	border-left      : 4px solid var(--cp-accent) !important;
+	background       : var(--cp-contrast) !important;
+	color            : var(--cp-text) !important;
+	border-radius    : 0 8px 8px 0;
+}
+.cp-embed ul.cp-downloads {
+	list-style       : none;
+	padding          : 0;
+}
+.cp-embed ul.cp-downloads li {
+	margin           : 0 0 0.8rem;
+	padding          : 0.6rem 0.9rem;
+	border           : var(--cp-bw) solid var(--cp-border);
+	border-radius    : 10px;
+	background       : var(--cp-surface);
+}
+.cp-embed ul.cp-downloads .cp-dl-links {
+	display          : block;
+	margin-top       : 0.3rem;
+}
+.cp-embed ul.cp-downloads .cp-dl-links a {
+	margin-right     : 1rem;
+	font-weight      : 600;
+}
+
+/* word classes (tag layer): N noun, V verb, A adjective, D determiner, P pronoun,
+   S preposition, C conjunction, R adverb, F punctuation, I interjection, Z numeral */
+.cp-embed { --wc-N:#dbeafe; --wc-V:#fde2e2; --wc-A:#dcfce7; --wc-D:#fef3c7; --wc-P:#ede9fe; --wc-S:#ccfbf1;
+            --wc-C:#fce7f3; --wc-R:#ffedd5; --wc-F:#e5e7eb; --wc-I:#ecfccb; --wc-Z:#e0f2fe; }
+html[data-cp-mode="night"] .cp-embed { --wc-N:#1e3a5f; --wc-V:#5c2323; --wc-A:#1d4a2c; --wc-D:#4d3b10; --wc-P:#3b2a63;
+            --wc-S:#134e4a; --wc-C:#5a1d3f; --wc-R:#5a3112; --wc-F:#374151; --wc-I:#3f4a14; --wc-Z:#0c4a6e; }
+.cp-embed tr.wc-N td, .cp-embed .wc-key.wc-N { background: var(--wc-N) !important; }
+.cp-embed tr.wc-V td, .cp-embed .wc-key.wc-V { background: var(--wc-V) !important; }
+.cp-embed tr.wc-A td, .cp-embed .wc-key.wc-A { background: var(--wc-A) !important; }
+.cp-embed tr.wc-D td, .cp-embed .wc-key.wc-D { background: var(--wc-D) !important; }
+.cp-embed tr.wc-P td, .cp-embed .wc-key.wc-P { background: var(--wc-P) !important; }
+.cp-embed tr.wc-S td, .cp-embed .wc-key.wc-S { background: var(--wc-S) !important; }
+.cp-embed tr.wc-C td, .cp-embed .wc-key.wc-C { background: var(--wc-C) !important; }
+.cp-embed tr.wc-R td, .cp-embed .wc-key.wc-R { background: var(--wc-R) !important; }
+.cp-embed tr.wc-F td, .cp-embed .wc-key.wc-F { background: var(--wc-F) !important; }
+.cp-embed tr.wc-I td, .cp-embed .wc-key.wc-I { background: var(--wc-I) !important; }
+.cp-embed tr.wc-Z td, .cp-embed .wc-key.wc-Z { background: var(--wc-Z) !important; }
+.cp-embed tr[class^="wc-"] td, .cp-embed .wc-key { color: var(--cp-text) !important; }
+.cp-embed table.cp-sample td, .cp-embed table.cp-sample th {
+	white-space      : nowrap;
+	overflow-wrap    : normal;
+	padding          : 0.22rem 0.9rem 0.22rem 0.5rem;
+	font-family      : var(--cp-font-concordance, ui-monospace, monospace);
+	border-bottom    : 1px solid var(--cp-bg);
+}
+.cp-embed .wc-legend {
+	display          : flex;
+	flex-wrap        : wrap;
+	gap              : 0.4rem;
+	margin           : 0.4rem 0 1rem;
+	padding          : 0;
+	list-style       : none;
+	font-size        : 0.85rem;
+}
+.cp-embed .wc-key {
+	display          : inline-block;
+	padding          : 0.15rem 0.55rem;
+	border-radius    : 6px;
+	border           : var(--cp-bw) solid var(--cp-border);
+}
+
+/* tagset tables (pos, spos, tag/subtag pages): heading row in the word-class color */
+.cp-embed { --wc-W:#f5f5f4; }
+html[data-cp-mode="night"] .cp-embed { --wc-W:#44403c; }
+.cp-embed tr.wc-W td, .cp-embed .wc-key.wc-W { background: var(--wc-W) !important; }
+.cp-embed tr.wc-N th { background: var(--wc-N) !important; }
+.cp-embed tr.wc-V th { background: var(--wc-V) !important; }
+.cp-embed tr.wc-A th { background: var(--wc-A) !important; }
+.cp-embed tr.wc-D th { background: var(--wc-D) !important; }
+.cp-embed tr.wc-P th { background: var(--wc-P) !important; }
+.cp-embed tr.wc-S th { background: var(--wc-S) !important; }
+.cp-embed tr.wc-C th { background: var(--wc-C) !important; }
+.cp-embed tr.wc-R th { background: var(--wc-R) !important; }
+.cp-embed tr.wc-F th { background: var(--wc-F) !important; }
+.cp-embed tr.wc-I th { background: var(--wc-I) !important; }
+.cp-embed tr.wc-Z th { background: var(--wc-Z) !important; }
+.cp-embed tr.wc-W th { background: var(--wc-W) !important; }
+.cp-embed tr[class^="wc-"] th { color: var(--cp-text) !important; }
+.cp-embed table.cp-tagset th, .cp-embed table.cp-tagset td {
+	padding          : 0.3rem 0.9rem 0.3rem 0.5rem;
+	border-bottom    : 1px solid var(--cp-border) !important;
+	white-space      : nowrap;
+	overflow-wrap    : normal;
+}
+.cp-embed table.cp-tagset code, .cp-embed .cp-tagset-intro code, .cp-embed p code {
+	font-family      : var(--cp-font-concordance, ui-monospace, monospace);
+	font-weight      : 700;
+	color            : var(--e-blue);
+}
+.cp-embed .cp-toc {
+	line-height      : 1.9;
+}
+
+/* one-time notice on the query form about the case-insensitive default (css/cqpweb-new-ui/site.js) */
+.cp-case-notice, .cp-query-notice {
+	display          : flex;
+	gap              : 1rem;
+	align-items      : flex-start;
+	margin           : 0 0 1rem;
+	padding          : 0.8rem 1rem;
+	border-radius    : 12px;
+	border-left      : 4px solid var(--cp-accent);
+	background       : var(--cp-contrast);
+	color            : var(--cp-text);
+}
+.cp-case-notice p, .cp-query-notice p {
+	margin           : 0;
+	flex             : 1;
+}
+.cp-case-notice .cp-case-q, .cp-query-notice .cp-case-q {
+	font-family      : var(--cp-font-concordance, ui-monospace, monospace);
+	font-weight      : 700;
+}
+@media (max-width: 760px) {
+	.cp-case-notice { flex-direction: column; }
+}
+
+/* the note above the results when bare words typed in CQP syntax were turned into [word="..."]: meant to be impossible to miss */
+.cp-query-notice {
+	margin           : 0.5rem 0 1.2rem;
+	padding          : 1.1rem 1.4rem 1.1rem 4.2rem;
+	position         : relative;
+	background       : #1d4ed8;
+	color            : #ffffff;
+	border           : 4px solid #0b2a7a;
+	border-left-width: 4px;
+	border-radius    : 14px;
+	box-shadow       : 0 6px 20px rgba(29, 78, 216, 0.35);
+	font-size        : 1.3rem;
+	font-weight      : 700;
+	line-height      : 1.45;
+}
+html[data-cp-mode="night"] .cp-query-notice {
+	background       : #2563eb;
+	border-color     : #93c5fd;
+	box-shadow       : 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+.cp-query-notice::before {
+	content          : "!";
+	position         : absolute;
+	left             : 1.1rem;
+	top              : 1.1rem;
+	width            : 2.2rem;
+	height           : 2.2rem;
+	border-radius    : 50%;
+	background       : #ffd60a;
+	color            : #0b2a7a;
+	font-size        : 1.5rem;
+	font-weight      : 900;
+	line-height      : 2.2rem;
+	text-align       : center;
+}
+.cp-query-notice p {
+	color            : #ffffff;
+}
+.cp-query-notice .cp-case-q {
+	background       : rgba(255, 255, 255, 0.18);
+	color            : #ffe066;
+	padding          : 0.05em 0.35em;
+	border-radius    : 6px;
+	white-space      : nowrap;
+}
+@media (max-width: 760px) {
+	.cp-query-notice { font-size: 1.1rem; padding-left: 3.6rem; }
+	.cp-query-notice .cp-case-q { white-space: normal; }
+}
+
+/* query form: rows that do nothing in the selected query mode (Match strategy in CQP syntax) */
+tr.cp-off > td {
+	opacity          : 0.45;
+}
+tr.cp-off select {
+	cursor           : not-allowed;
+}
+.cp-off-why {
+	display          : block;
+	font-size        : 0.82rem;
+	color            : var(--cp-muted);
+	margin-top       : 0.2rem;
+}
+.cp-off-why[hidden] {
+	display          : none;
+}
+
+/* restriction forms: the heading of each metadata field, bold and left-aligned */
+td.layout-bg.algC[width="33%"] {
+	text-align       : left;
+	font-weight      : 700;
+}
+
+/* system messages: about one line of space between messages */
+tr.cp-msg-gap > td {
+	height           : 1.45em;
+	padding          : 0;
+	border           : 0;
+	background       : var(--cp-bg);
+}
+
+/* concordances: "Alternate words" (the menu above the concordance).
+ * html.cp-alt-bg: every second word gets a light background; html.cp-alt-text: a different text
+ * color; html.cp-alt-both: both, with a darker text color that stays legible on the background.
+ * Plain concordances: span.token.cp-tok-alt. Concordances with tags below the words (glossbox
+ * tables): the word cell and the tag cell under it share the class cp-col-alt and form one box,
+ * as wide as the wider of the two. The search hit (node) keeps its own highlight. */
+:root {
+	--cp-tok-alt          : color-mix(in srgb, var(--cp-accent) 18%, transparent);
+	--cp-tok-alt-text     : #1d4ed8;
+	--cp-tok-alt-text-on  : #1e3a8a;
+}
+html[data-cp-mode="night"] {
+	--cp-tok-alt          : color-mix(in srgb, var(--cp-accent) 30%, transparent);
+	--cp-tok-alt-text     : #93c5fd;
+	--cp-tok-alt-text-on  : #dbeafe;
+}
+html.cp-alt-bg span.token.cp-tok-alt, html.cp-alt-both span.token.cp-tok-alt {
+	background       : var(--cp-tok-alt);
+	border-radius    : 3px;
+	box-shadow       : 0 0 0 0.12em var(--cp-tok-alt);
+}
+html.cp-alt-text span.token.cp-tok-alt {
+	color            : var(--cp-tok-alt-text);
+	font-weight      : 600;
+}
+html.cp-alt-both span.token.cp-tok-alt {
+	color            : var(--cp-tok-alt-text-on);
+	font-weight      : 600;
+}
+html.cp-alt-bg table.glossbox-frame, html.cp-alt-both table.glossbox-frame {
+	border-collapse  : separate;
+	border-spacing   : 0;
+}
+html.cp-alt-bg td.glossbox, html.cp-alt-both td.glossbox, html.cp-alt-text td.glossbox {
+	padding          : 0.1rem 0.3rem;
+	margin           : 0;
+}
+html.cp-alt-bg td.glossbox.cp-col-alt, html.cp-alt-both td.glossbox.cp-col-alt {
+	background       : var(--cp-tok-alt);
+}
+html.cp-alt-bg td.glossbox.gl1.cp-col-alt, html.cp-alt-both td.glossbox.gl1.cp-col-alt {
+	border-radius    : 5px 5px 0 0;
+}
+html.cp-alt-bg td.glossbox.gl2.cp-col-alt, html.cp-alt-both td.glossbox.gl2.cp-col-alt {
+	border-radius    : 0 0 5px 5px;
+}
+html.cp-alt-text td.glossbox.cp-col-alt, html.cp-alt-text td.glossbox.cp-col-alt span.token {
+	color            : var(--cp-tok-alt-text);
+	font-weight      : 600;
+}
+html.cp-alt-both td.glossbox.cp-col-alt, html.cp-alt-both td.glossbox.cp-col-alt span.token {
+	color            : var(--cp-tok-alt-text-on);
+	font-weight      : 600;
+}
+label.cp-alt-toggle {
+	display          : inline-flex;
+	align-items      : center;
+	gap              : 0.4rem;
+	margin           : 0 0 0.5rem;
+	font-family      : var(--cp-font-interface);
+	font-size        : 0.9rem;
+	color            : var(--cp-text);
+	cursor           : pointer;
+}
+a.control-box.cp-armed {
+	color            : #b3261e;
+	font-weight      : 700;
+}
+html[data-cp-mode="night"] a.control-box.cp-armed {
+	color            : #ff9b92;
+}
+
+/* the summary line above a concordance (rewritten by site.js): the query in code type, the frequency in bold */
+code.cp-q {
+	font-family      : "CP Noto Sans Mono", ui-monospace, monospace;
+	font-size        : 0.92em;
+	font-weight      : 700;
+	background       : var(--cp-hit);
+	color            : var(--cp-hit-text);
+	padding          : 0.05em 0.4em;
+	border-radius    : 5px;
+	white-space      : pre-wrap;
+}
+code.cp-freq {
+	font-family      : "CP Noto Sans Mono", ui-monospace, monospace;
+	font-size        : 0.95em;
+	font-weight      : 700;
+}

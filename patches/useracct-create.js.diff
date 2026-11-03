@@ -1,0 +1,20 @@
+--- a/jsc/useracct-create.js
++++ b/jsc/useracct-create.js
+@@ -101,13 +101,15 @@
+  */
+ function check_password_security(username, email, password, check_password)
+ {
+-	if (undefined === pwd || '' === pwd || null === pwd)
++	/* cqpweb-new-ui: this function used an undefined variable "pwd" instead of "password", so it
++	 * stopped with an error and the form was sent whatever the password */
++	if (undefined === password || '' === password || null === password)
+ 		return "Your password cannot be an empty string!";
+ 
+ 	var password_minimum_length = parseInt(get_application_data("pwdMinLength"));
+ 
+ 	/* following array-breaking trick is needed to count codepoints instead of UTF-16 units */
+-	var len = [...pwd].length;
++	var len = [...password].length;
+ 	if (len  < password_minimum_length)
+ 		return "Your password is too short! It needs to be " + (password_minimum_length - len) + " characters longer.";
+ 	

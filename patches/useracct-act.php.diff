@@ -1,0 +1,33 @@
+--- a/lib/useracct-act.php
++++ b/lib/useracct-act.php
+@@ -125,7 +125,7 @@
+ 		/* add a delay to reduce the possibility of excessive experimentation via login form */
+ 		sleep(3);
+ 		exiterror_login(array(
+-			"That username/password combination was not recognised.",
++			"That username/password combination was not recognized.",
+ 			"You may have mistyped either the username or the password. (Both are case-sensitive.)",
+ 			"Please go back to the log on page and try again."
+ 			));
+@@ -234,6 +234,10 @@
+ 		exiterror("Your password cannot be an empty string!");
+ 	if ( ($l = utf8_strlen($password)) < $Config->password_minimum_length )
+ 		exiterror("Your password is too short! It needs to be " . ($Config->password_minimum_length - $l) . " characters longer.");
++	/* cqpweb-new-ui: password rule */
++	require_once('../lib/cqpweb-new-ui/site-lib.php');
++	if ('' !== ($cp_err = cp_password_rule_error($password)))
++		exiterror($cp_err);
+ 	if ($password == $new_username)
+ 		exiterror("Your password cannot be the same as your username!");
+ 	if ($password == $email)
+@@ -510,6 +514,10 @@
+ 	/* Bad password checks */
+ 	if (empty($_GET['newPassword']))
+ 		exiterror("The password cannot be an empty string!");
++	/* cqpweb-new-ui: password rule */
++	require_once('../lib/cqpweb-new-ui/site-lib.php');
++	if ('' !== ($cp_err = cp_password_rule_error((string)$_GET['newPassword'])))
++		exiterror($cp_err);
+ 	if ($_GET['newPassword'] == $_GET['userForPasswordReset'])
+ 		exiterror("The password cannot be the same as the username!");
+ 	$info = get_user_info($_GET['userForPasswordReset']);

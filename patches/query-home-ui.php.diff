@@ -1,0 +1,49 @@
+--- a/lib/query-home-ui.php
++++ b/lib/query-home-ui.php
+@@ -142,14 +142,18 @@
+ 	echo print_menurow_index('lookup'        , 'Word lookup'           , '', $what_ui);
+ 	echo print_menurow_index('freqList'      , 'Frequency lists'       , '', $what_ui);
+ 	echo print_menurow_index('keywords'      , 'Keywords'              , '', $what_ui);
+-	echo print_menurow_index('analyseCorpus' , 'Analyse corpus'        , '', $what_ui);
++	echo print_menurow_index('analyseCorpus' , 'Analyze corpus'        , '', $what_ui);
+ 	if ($Corpus->access_level == PRIVILEGE_TYPE_CORPUS_FULL)
+ 		echo print_menurow_index('export'    , 'Export corpus'         , '', $what_ui);
+ 	
++	/* cqpweb-new-ui: Tutorials section */
++	require_once('../lib/cqpweb-new-ui/embed-lib.php');
++	echo cp_tutorial_menu($what_ui);
++	
+ 	echo print_menurow_heading('Saved query data');
+ 	echo print_menurow_index('history'       , 'Query history'         , '', $what_ui);
+ 	echo print_menurow_index('savedQs'       , 'Saved queries'         , '', $what_ui);
+-	echo print_menurow_index('categorisedQs' , 'Categorised queries'   , '', $what_ui);
++	echo print_menurow_index('categorisedQs' , 'Categorized queries'   , '', $what_ui);
+ 	echo print_menurow_index('uploadQ'       , 'Upload a query'        , '', $what_ui);
+ 	echo print_menurow_index('subcorpus'     , 'Create/edit subcorpora', '', $what_ui);
+ 	
+@@ -205,8 +209,8 @@
+ 		echo print_menurow_index('manageAnnotation'    , 'Manage annotation'        , '', $what_ui);
+ 		echo print_menurow_index('manageAlignment'     , 'Manage parallel alignment', '', $what_ui);
+ 		echo print_menurow_index('manageFreqLists'     , 'Manage frequency lists'   , '', $what_ui);
+-		echo print_menurow_index('manageVisualisation' , 'Manage visualisation'     , '', $what_ui);
+-		echo print_menurow_index('manageXmlViz'        , 'Manage XML visualisations', '', $what_ui);
++		echo print_menurow_index('manageVisualisation' , 'Manage visualization'     , '', $what_ui);
++		echo print_menurow_index('manageXmlViz'        , 'Manage XML visualizations', '', $what_ui);
+ 		echo print_menurow_index('addToCorpus'         , 'Add corpus data'          , '', $what_ui);
+ 		echo print_menurow_index('viewSetupNotes'      , 'Corpus setup notes'       , '', $what_ui);
+ 		echo print_menurow_index('cachedQs'            , 'Cached queries'           , '', $what_ui);
+@@ -433,6 +437,14 @@
+ 	do_ui_embed_page();
+ 	$helplink = 'hello';
+ 	break;
++
++/* cqpweb-new-ui: CQP syntax tutorials */
++case 'cpTutorialEn':
++case 'cpTutorialEs':
++	require_once('../lib/cqpweb-new-ui/embed-lib.php');
++	cp_tutorial_page($what_ui);
++	$helplink = 'hello';
++	break;
+ 	
+ 
+ 

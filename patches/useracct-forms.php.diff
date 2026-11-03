@@ -1,0 +1,61 @@
+--- a/lib/useracct-forms.php
++++ b/lib/useracct-forms.php
+@@ -217,7 +217,7 @@
+ 					
+ 					<p>
+ 						Not registered yet? 
+-						<a class="control-inline" href="index.php?ui=create">Create an account!</a>
++						<a class="cp-home-cta" href="index.php?ui=create">Create an account</a>
+ 					</p>
+ 					
+ 					<?php
+@@ -308,8 +308,9 @@
+ 		<input type="hidden" name="userAction" value="newUser">
+ 		<table class="layout-frame fullwidth">
+ 			<tr>
+-				<th class="layout-strong" colspan="2">Register for an account on this CQPweb server</th>
++				<th class="layout-strong" colspan="2">Create an account</th>
+ 			</tr>
++			<?php require_once('../lib/cqpweb-new-ui/site-lib.php'); echo cp_signup_notice_row(); /* cqpweb-new-ui */ ?>
+ 			<tr>
+ 				<td class="layout-bg" colspan="2">
+ 					<p>
+@@ -318,7 +319,7 @@
+ 						You <strong>can</strong> use your email address as your username if you want to (but you don't have to).
+ 					</p>
+ 					<p>
+-						Your password or passphrase can consist of any characters you like including all punctuation marks and spaces. 
++						<?= escape_html(cp_password_rule_text()) /* cqpweb-new-ui */ ?> 
+ 						The length limit is <?= NONHANDLE_MAX_STRING ?> characters.
+ 					</p>
+ 				</td>
+@@ -506,7 +507,7 @@
+ 				</td>
+ 			</tr>
+ 			<tr>
+-				<td class="layout-fg">Please enter your location (select a country or territory):
++				<td class="layout-fg"><!-- cqpweb-new-ui: the label was printed twice -->
+ 					<label for="country">Please enter your location (select a country or territory):</label>
+ 				</td>
+ 				<td class="layout-fg">
+@@ -922,7 +923,7 @@
+ 			</tr>
+ 			<tr>
+ 				<td class="layout-bg algC" colspan="2">
+-					<p>Use this form to personalise your options for the user interface.</p>
++					<p>Use this form to personalize your options for the user interface.</p>
+ 					<p>Important note: these settings apply to all the corpora that you access on CQPweb.</p>
+ 				</td>
+ 			</tr>
+@@ -1084,9 +1085,9 @@
+ 			</tr>
+ 			<tr>
+ 				<td class="layout-fg">
+-					Override corpus colour scheme with monochrome
++					Override corpus color scheme with monochrome
+ 					<br>
+-					<em>(useful if the colour schemes cause you vision difficulties)</em>
++					<em>(useful if the color schemes cause you vision difficulties)</em>
+ 				</td>
+ 				<td class="layout-fg">
+ 					<select name="newSetting_css_monochrome">

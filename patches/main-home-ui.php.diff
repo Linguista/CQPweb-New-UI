@@ -1,0 +1,15 @@
+--- a/lib/main-home-ui.php
++++ b/lib/main-home-ui.php
+@@ -45,6 +45,12 @@
+ 
+ cqpweb_startup_environment(CQPWEB_STARTUP_DONT_CONNECT_CQP, RUN_LOCATION_MAINHOME);
+ 
++/* cqpweb-new-ui: the home page is drawn by lib/cqpweb-new-ui/home-ui.php; the original code below is not reached. */
++require_once('../lib/cqpweb-new-ui/home-ui.php');
++cp_home_page();
++cqpweb_shutdown_environment();
++exit;
++
+ if ($Config->homepage_use_corpus_categories)
+ {
+ 	/* get a list of categories */

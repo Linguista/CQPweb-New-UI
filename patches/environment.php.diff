@@ -1,0 +1,31 @@
+--- a/lib/environment.php
++++ b/lib/environment.php
+@@ -329,7 +329,7 @@
+ 		INSTALLER_STATUS_TAGGING            => 'Generating input data',
+ 		INSTALLER_STATUS_ENCODING           => 'Encoding corpus',
+ 		INSTALLER_STATUS_INDEXING           => 'Indexing corpus',
+-		INSTALLER_STATUS_SETUP              => 'Finalising setup',
++		INSTALLER_STATUS_SETUP              => 'Finalizing setup',
+ 		INSTALLER_STATUS_FREQLIST           => 'Building frequency lists',
+ 		INSTALLER_STATUS_DONE               => 'Installation complete',
+ 		INSTALLER_STATUS_ABORTED            => 'Aborted!',
+@@ -745,7 +745,7 @@
+         'colloc'=> 'collocation',
+         'sort' => 'query sort',
+         'dist' => 'distribution',
+-        'catquery' => 'categorised query'
++        'catquery' => 'categorized query'
+ ];
+ // and at some point the above needs to be changed into a const array. OR got shut of. 
+ 	
+@@ -2199,6 +2199,10 @@
+ 
+ 
+ 	/* We can now process the remainder of the flags for sanity checks. */
++	/* cqpweb-new-ui: maintenance mode (superusers only while it is on) */
++	require_once(__DIR__ . '/cqpweb-new-ui/site-lib.php');
++	cp_maintenance_gate();
++
+ 	cqpweb_check_environment_flags($flags);
+ 	
+ 	/* and that's it. */

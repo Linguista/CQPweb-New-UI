@@ -1,0 +1,82 @@
+--- a/lib/info-forms.php
++++ b/lib/info-forms.php
+@@ -49,7 +49,7 @@
+ 			<th class="layout-strong"><?= escape_html($embed->title); ?></th>
+ 		</tr>
+ 		<tr>
+-			<td class="layout-fg"><?= ($embed->file_path); ?></td>
++			<td class="layout-fg"><?php require_once('../lib/cqpweb-new-ui/embed-lib.php'); echo cp_render_embed($embed->file_path); /* cqpweb-new-ui */ ?></td>
+ 		</tr>
+ 	</table>
+ 	
+@@ -82,13 +82,13 @@
+ 						<a class="link" href="https://doi.org/10.2478/icame-2014-0004">
+ 							[Full text on publisher's website]
+ 						</a>
+-						<a class="link" href="http://www.lancaster.ac.uk/staff/hardiea/cqpweb-paper.pdf">
++						<a class="link" href="https://www.lancaster.ac.uk/staff/hardiea/cqpweb-paper.pdf">
+ 							[Alternative source for PDF]
+ 						</a>
+ 					</li>
+ 				</ul>
+ 							
+-				<p><a class="link" href="http://cwb.sourceforge.net/doc_links.php">Click here for other references relating to Corpus Workbench software.</a></p>
++				<p><a class="link" href="https://cwb.sourceforge.io/doc_links.php">Click here for other references relating to Corpus Workbench software.</a></p>
+ 				
+ 				<p class="spacer"></p>
+ 				
+@@ -114,23 +114,23 @@
+ 				<p>The underlying technology of CQPweb is manifold.</p>
+ 				<ul>
+ 					<li>
+-						Indexing and querying is done using the <a class="link" href="http://cwb.sourceforge.net/">IMS Corpus Workbench</a> with its
+-						<a class="link" href="http://cwb.sourceforge.net/files/CQP_Tutorial/">CQP corpus query processor</a>.
++						Indexing and querying is done using the <a class="link" href="https://cwb.sourceforge.io/">IMS Corpus Workbench</a> with its
++						<a class="link" href="https://cwb.sourceforge.io/files/CQP_Tutorial/">CQP corpus query processor</a>.
+ 						Thus the name.
+ 					</li>
+ 					<li>
+ 						Other functions (collocations, corpus management etc.) are powered by
+-						<a class="link"  href="http://www.mysql.com/">MySQL</a> or <a class="link" href="https://mariadb.org/">MariaDB</a> databases.
++						<a class="link"  href="https://www.mysql.com/">MySQL</a> or <a class="link" href="https://mariadb.org/">MariaDB</a> databases.
+ 					</li>
+ 					<li>
+-						The web-scripts are written in <a class="link" href="http://www.php.net/">PHP</a>.
++						The web-scripts are written in <a class="link" href="https://www.php.net/">PHP</a>.
+ 					</li>
+ 					<li>
+-						<a class="link" href="http://www.w3schools.com/JS">JavaScript</a> is used to make the data displays more interactive.
++						<a class="link" href="https://www.w3schools.com/JS">JavaScript</a> is used to make the data displays more interactive.
+ 					</li>
+ 					<li>
+-						The look-and-feel relies on <a class="link" href="http://www.w3schools.com/css">Cascading Style Sheets</a>
+-						plus good old fashioned <a class="link" href="http://www.w3schools.com/html">HTML</a>.
++						The look-and-feel relies on <a class="link" href="https://www.w3schools.com/css">Cascading Style Sheets</a>
++						plus good old fashioned <a class="link" href="https://www.w3schools.com/html">HTML</a>.
+ 					</li>
+ 				</ul>
+ 				
+@@ -158,7 +158,7 @@
+ 	<table class="layout-frame fullwidth">
+ 	
+ 	<tr>
+-		<th class="layout-strong">Latest news</th>
++		<th class="layout-strong">CQPweb news</th>
+ 	</tr>
+ 	
+ 	<tr>
+@@ -1861,12 +1861,12 @@
+ 			
+ 			<ul>
+ 				<li>
+-					Join <a class="link" href="http://devel.sslmit.unibo.it/mailman/listinfo/cwb">the CWB developers' email list</a> 
++					Join <a class="link" href="https://devel.sslmit.unibo.it/mailman/listinfo/cwb">the CWB developers' email list</a> 
+ 					and send an email to the list reporting your problem.
+ 				</li>
+ 				<li>
+ 					If you have a SourceForge.net account, you can post a report to 
+-					<a class="link" href="http://sourceforge.net/p/cwb/bugs">our bug tracker</a>.
++					<a class="link" href="https://sourceforge.net/p/cwb/bugs">our bug tracker</a>.
+ 				</li>
+ 			</ul>
+ 			

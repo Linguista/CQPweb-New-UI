@@ -1,0 +1,13 @@
+--- a/lib/exiterror-lib.php
++++ b/lib/exiterror-lib.php
+@@ -534,6 +534,10 @@
+ {
+ 	global $Config;
+ 
++	/* cqpweb-new-ui: a waiting page that retries by itself, instead of an error */
++	require_once(__DIR__ . '/cqpweb-new-ui/site-lib.php');
++	cp_queue_page($process_type);
++
+ 	exiterror(array(
+ 			"Too many database processes!",
+ 			"There are already {$Config->sql_process_limit[$process_type]} " . "{$Config->sql_process_name[$process_type]}	databases being compiled.",

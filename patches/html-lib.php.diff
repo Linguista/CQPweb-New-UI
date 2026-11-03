@@ -1,0 +1,282 @@
+--- a/lib/html-lib.php
++++ b/lib/html-lib.php
+@@ -106,6 +106,12 @@
+ 			<a id="menu:about:account" class="menuItem" href="{$prefix}usr" data-tooltip="Account control and your personal settings">User account</a>
+ 		END_OF_HTML;
+ 	
++	/* cqpweb-new-ui: the site's news page, when it exists and is switched on (Personalization page) */
++	require_once(__DIR__ . '/cqpweb-new-ui/brand-lib.php');
++	$cp_news = (cp_brand()['newsShow'] && cp_news_available())
++		? '<a id="menu:about:cpnews" class="menuItem" href="' . $prefix . 'news.php" data-tooltip="What has changed on this site">' . escape_html(cp_news_title()) . '</a>'
++		: '';
++	
+ 	return print_menurow_heading('About CQPweb') 
+ 		. <<<END_OF_HTML
+ 		
+@@ -114,13 +120,15 @@
+ 			<a id="menu:about:help" class="menuItem" target="cqpweb_help_browser" href="help.php" data-tooltip="Open the help browser">Help system</a>
+ 		
+ 			<a id="menu:about:videos" class="menuItem" 
+-				href="http://www.youtube.com/playlist?list=PL2XtJIhhrHNQgf4Dp6sckGZRU4NiUVw1e"
++				href="https://www.youtube.com/playlist?list=PL2XtJIhhrHNQgf4Dp6sckGZRU4NiUVw1e"
+ 				data-tooltip="CQPweb video tutorials (on YouTube)"
+ 			>Video tutorials</a>
+ 		
++			$cp_news
++		
+ 		END_OF_HTML
+ 		. print_menurow_index('who_the_hell', 'Who did it?', '', $what_ui)
+-		. print_menurow_index('latest'      , 'Latest news', '', $what_ui)
++		. print_menurow_index('latest'      , 'CQPweb news', '', $what_ui)
+ 		. print_menurow_index('bugs'        , 'Report bugs', '', $what_ui)
+ 		;
+ }
+@@ -804,13 +812,13 @@
+ 	switch(true)
+ 	{
+ 	case is_null($selected):
+-		$options = "<option disabled selected value=\"\">Choose a colour scheme...</option>\n";
++		$options = "<option disabled selected value=\"\">Choose a color scheme...</option>\n";
+ 		foreach ($colour_words as $col)
+ 			$options.= "\t\t\t\t\t<option value=\"$col\">" . ucfirst($col) . "</option>\n";
+ 		break;
+ 		
+ 	case 'json' == $selected_type:
+-		return "(Custom colour scheme, not editable yet)";
++		return "(Custom color scheme, not editable yet)";
+ 		break;
+ 		
+ 	case 'cssfile' == $selected_type:
+@@ -910,7 +918,9 @@
+ 	}
+ SKIP_SKB:
+ 
+-
++	/* cqpweb-new-ui: the site's own footer text and the Help, news and Contact links */
++	require_once(__DIR__ . '/cqpweb-new-ui/brand-lib.php');
++	$cp_footer = cp_footer_html();
+ 
+ 	return <<<END_FOOTER_HTML
+ 	
+@@ -924,7 +934,7 @@
+ 				</tr>
+ 			</table>
+ 		</footer>
+-		
++		$cp_footer
+ 		<div id="templateForToolTip" class="floatingToolTip">
+ 			<table class="floatingToolTipFrame">
+ 				<tr>
+@@ -1110,8 +1120,9 @@
+ 		<title><?= $this->title ?></title>
+ 		<meta charset="UTF-8">
+ 		
+-		<script       src="<?= $url_prefix ?>depend/jquery.js"></script>
+-		<script defer src="<?= $url_prefix ?>always.js"></script>
++		<?php /* cqpweb-new-ui: version tags (cp_asset_url); CQPweb wrote these two without "jsc/" */ ?>
++		<script       src="<?= cp_asset_url($url_prefix, 'jsc/depend/jquery.js') ?>"></script>
++		<script defer src="<?= cp_asset_url($url_prefix, 'jsc/always.js') ?>"></script>
+ 		
+ 		<?php
+ 		/* jQuery can't be deferred safely. Must be loaded synchronously. For reason why see:
+@@ -1119,17 +1130,17 @@
+ 		 *   https://github.com/jquery/jquery/issues/3271
+ 		 * but we can "defer" the rest, starting with "always", as above. */
+ 		foreach ($this->js_builtin as $js)
+-			echo "\t\t<script defer src=\"{$url_prefix}jsc/$js.js\"></script>\n";
++			echo "\t\t<script defer src=\"", cp_asset_url($url_prefix, "jsc/$js.js"), "\"></script>\n";
+ 		
+ 		foreach ($this->js_extra as $js)
+-			echo "\t\t<script defer src=\"{$url_prefix}jsc/extra/$js.js\"></script>\n";
++			echo "\t\t<script defer src=\"", cp_asset_url($url_prefix, "jsc/extra/$js.js"), "\"></script>\n";
+ 		
+ 		/* js now done - move on to css. */
+-		print_header_css_embed($this->colour_scheme);
++		echo print_header_css_embed($this->colour_scheme); /* cqpweb-new-ui: CQPweb called this without echo, so the page got no stylesheet */
+ 
+ 		/* Extra CSS files & literals, if supplied, override the colour scheme and system CSS code. */
+ 		foreach($this->css_extra as $css)
+-			echo "\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"{$url_prefix}css/extra/$css.css\">\n";
++			echo "\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"", cp_asset_url($url_prefix, "css/extra/$css.css"), "\">\n";
+ 
+ 		foreach($this->css_literals as $code)
+ 			echo "\n\n\t<style>\n$code\n\t</style>\n";
+@@ -1178,7 +1189,7 @@
+ 				</tr>
+ 			</table>
+ 		</footer>
+-		
++		<?php require_once(__DIR__ . '/cqpweb-new-ui/brand-lib.php'); echo cp_footer_html(); /* cqpweb-new-ui: site footer, Help, news and Contact links */ ?>
+ 		<div id="templateForToolTip" class="floatingToolTip">
+ 			<table class="floatingToolTipFrame">
+ 				<tr>
+@@ -1257,6 +1268,22 @@
+ 	return RELATIVE_URL_BASE[$Config->run_location];
+ }
+ 
++/**
++ * cqpweb-new-ui: the address of one of CQPweb's own script or stylesheet files, with "?v=" and the
++ * file's modification time. A browser treats a new "?v=" as a new file and fetches it, so a copy
++ * cached before an update is never used again. Without the tag, copies of jsc/always.js fetched
++ * in August 2026 (served then with no Cache-Control) were still being run in November 2026, after
++ * the CQPweb update of 23 October, and the "please wait" spinner asked for "undefinedcss/img/throbber.gif".
++ *
++ * @param string $url_prefix  The page's URL prefix (get_url_prefix()).
++ * @param string $rel         The file's path from the CQPweb root, for example "jsc/always.js".
++ */
++function cp_asset_url(string $url_prefix, string $rel) : string
++{
++	$f = __DIR__ . '/../' . $rel;
++	return $url_prefix . $rel . (is_file($f) ? '?v=' . filemtime($f) : '');
++}
++
+ 
+ /** Prints the style element for the header. */
+ function print_header_css_embed(string $colour_scheme) : string
+@@ -1265,6 +1292,7 @@
+ 	global $User;
+ 	
+ 	$url_prefix = get_url_prefix();
++	$cp_system_css = cp_asset_url($url_prefix, 'css/0system.css'); /* cqpweb-new-ui: version tag */
+ 	
+ 	/* override the CSS url with accessibility style option if enabled;
+ 	 * isset() check necessary because in case of error this can be called before $User setup. */
+@@ -1288,7 +1316,7 @@
+ 					--colour-tooltip-text   : black ;
+ 				}
+ 			</style>
+-			<link rel="stylesheet" type="text/css" href="{$url_prefix}css/0system.css">
++			<link rel="stylesheet" type="text/css" href="{$cp_system_css}">
+ 			<style>
+ 				/* add an override for table borders in monochrome : just one pixel, collapse on */
+ 				table,td,th {
+@@ -1306,13 +1334,17 @@
+ 	{
+ 		$root = print_css_root_variables($colour_scheme);
+ 		/* for explanation of the following line: see doc on the config variable "colour_scheme_rainbow_override" */
+-		$rainbow = $Config->colour_scheme_rainbow_override ? "\n\t<link rel=\"stylesheet\" type=\"text/css\" href=\"{$url_prefix}css/1rainbow.css\">" : '';
++		$rainbow = $Config->colour_scheme_rainbow_override ? "\n\t<link rel=\"stylesheet\" type=\"text/css\" href=\"" . cp_asset_url($url_prefix, 'css/1rainbow.css') . "\">" : '';
++		/* cqpweb-new-ui: palettes, fonts, skin and day/night switch (lib/cqpweb-new-ui/appearance-lib.php) */
++		require_once(__DIR__ . '/cqpweb-new-ui/appearance-lib.php');
++		$corpora_pro_head = cp_appearance_head();
+ 		return <<<END_HTML_CSS
+ 		
+ 			<style>
+ 			$root
+ 			</style>
+-			<link rel="stylesheet" type="text/css" href="{$url_prefix}css/0system.css">$rainbow
++			<link rel="stylesheet" type="text/css" href="{$cp_system_css}">$rainbow
++			$corpora_pro_head
+ 		
+ 		END_HTML_CSS;
+ 	}
+@@ -1385,28 +1417,36 @@
+ 	
+ 	/* Extra CSS files, if supplied, add additional styles for whatever reason. They do not get overridden. */
+ 	foreach($extra_css as $extra)
+-		$hdr .= "\t<link rel=\"stylesheet\" type=\"text/css\" href=\"{$url_prefix}css/extra/$extra.css\">\n";
++		$hdr .= "\t<link rel=\"stylesheet\" type=\"text/css\" href=\"" . cp_asset_url($url_prefix, "css/extra/$extra.css") . "\">\n";
+ 	
+ 	/* jQuery can't be deferred safely. Must be loaded synchronously. For reason why see:
+ 	 *   https://stackoverflow.com/questions/37272020/jquery-loaded-async-and-ready-function-not-working
+ 	 *   https://github.com/jquery/jquery/issues/3271
+ 	 * but we can "defer" the rest, starting with "always/tooltip". As follows. */ 
+ 	
++	/* cqpweb-new-ui: version tags (cp_asset_url) */
++	$cp_jquery  = cp_asset_url($url_prefix, 'jsc/depend/jquery.js');
++	$cp_always  = cp_asset_url($url_prefix, 'jsc/always.js');
++	$cp_tooltip = cp_asset_url($url_prefix, 'jsc/tooltip.js');
+ 	$hdr .= <<<END_HTML
+ 	
+-		<script       src="{$url_prefix}jsc/depend/jquery.js"></script>
+-		<script defer src="{$url_prefix}jsc/always.js"></script>
+-		<script defer src="{$url_prefix}jsc/tooltip.js"></script>
++		<script       src="{$cp_jquery}"></script>
++		<script defer src="{$cp_always}"></script>
++		<script defer src="{$cp_tooltip}"></script>
+ 	
+ 	END_HTML;
+ 	
+ 	foreach ($js_scripts as $js)
+ 		if (is_file("../jsc/$js.js"))
+-			$hdr .= "\t<script defer src=\"{$url_prefix}jsc/$js.js\"></script>\n";
++			$hdr .= "\t<script defer src=\"" . cp_asset_url($url_prefix, "jsc/$js.js") . "\"></script>\n";
+ 		else
+-			$hdr .= "\t<script defer src=\"{$url_prefix}jsc/extra/$js.js\"></script>\n"; /* sopmething of a bodge. But, the UiPageFramer has a much better way. */
++			$hdr .= "\t<script defer src=\"" . cp_asset_url($url_prefix, "jsc/extra/$js.js") . "\"></script>\n"; /* sopmething of a bodge. But, the UiPageFramer has a much better way. */
+ 	$hdr .= "\n</head>\n<body>\n";
+ 	
++	/* cqpweb-new-ui: top bar with Homepage and Back-to-corpus buttons (lib/cqpweb-new-ui/appearance-lib.php) */
++	require_once(__DIR__ . '/cqpweb-new-ui/appearance-lib.php');
++	$hdr .= cp_navbar();
++	
+ 	if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/\bTrident\b/", $_SERVER['HTTP_USER_AGENT']))
+ 		$hdr .= <<<END_OF_WARNING
+ 		
+@@ -1648,16 +1688,19 @@
+ 	case RUN_LOCATION_ADM:
+ 		$execute_path = 'index.php?admF=execute&function=delete_system_message';
+ 		$after_path = urlencode("index.php?ui=systemMessages");
++		$edit_path = 'index.php?ui=systemMessages'; /* cqpweb-new-ui: edit links; [x] deletes through site.js, because CQPweb's own delete address can answer 403 Forbidden behind a web application firewall */
+ 		break;
+ 		
+ 	case RUN_LOCATION_USR:
+ 		$execute_path = '../adm/index.php?admF=execute&function=delete_system_message';
+ 		$after_path = urlencode("../usr/");
++		$edit_path = '../adm/index.php?ui=systemMessages';
+ 		break;
+ 		
+ 	case RUN_LOCATION_MAINHOME:
+ 		$execute_path = 'adm/index.php?admF=execute&function=delete_system_message';
+ 		$after_path = urlencode("../");
++		$edit_path = 'adm/index.php?ui=systemMessages';
+ 		break;
+ 		
+ 	case RUN_LOCATION_USERCORPUS:
+@@ -1665,6 +1708,7 @@
+ 		/* we are in a corpus */
+ 		$execute_path = 'execute.php?function=delete_system_message';
+ 		$after_path = urlencode(basename($_SERVER['SCRIPT_FILENAME']));
++		$edit_path = '../adm/index.php?ui=systemMessages';
+ 		break;
+ 	}
+ 	
+@@ -1682,8 +1726,12 @@
+ 		</tr>
+ 		
+ 		<?php
++		$cp_first_msg = true; /* cqpweb-new-ui: a gap of about one line between messages */
+ 		while ($o = mysqli_fetch_object($result))
+ 		{
++			if (!$cp_first_msg)
++				echo "\n\t\t\t<tr class=\"cp-msg-gap\" aria-hidden=\"true\"><td colspan=\"", ($User->is_admin() ? '3' : '2'), "\"></td></tr>\n";
++			$cp_first_msg = false;
+ 			?>
+ 			
+ 			<tr>
+@@ -1695,10 +1743,12 @@
+ 					echo <<<END_HTML
+ 					
+ 							<td rowspan="2" class="layout-fg hollow nowrap">
++								<a class="control-box" data-tooltip="Edit this system message" href="$edit_path#cpMsg$o->id">[edit]</a>
+ 								<a id="sysMsgDel:$o->id" 
+ 									class="control-box" 
+ 									data-tooltip="Delete this system message"
+-									href="$execute_path&args=$o->id&locTo=$after_path"
++									data-cp-sysmsg-del="$o->id"
++									href="$edit_path#cpMsg$o->id"
+ 									>[x]</a>
+ 							</td>
+ 					
+@@ -1710,7 +1760,10 @@
+ 				<td class="layout-fg">
+ 					<?php
+ 					/* Sanitise, then add br's, then restore whitelisted links ... */
+-					echo unescape_escaped_a_href(str_replace("\n", '<br>', escape_html(stripslashes($o->content)))), "\n";
++					/* cqpweb-new-ui: links to pages of this site (starting with "/" or this site's address) are not marked as external */
++					$cp_host = preg_quote(preg_replace('/^www\./i', '', strtolower((string)parse_url('//' . ($_SERVER['HTTP_HOST'] ?? 'localhost'), PHP_URL_HOST))), '~');
++					echo preg_replace('~<a class="link external" href="((?:/|https?://(?:www\.)?' . $cp_host . '(?=[/":]))[^"]*)"~', '<a class="link" href="$1"',
++						unescape_escaped_a_href(str_replace("\n", '<br>', escape_html(stripslashes($o->content))))), "\n";
+ 					?>
+ 				</td>
+ 			</tr>

@@ -1,0 +1,97 @@
+--- a/lib/admin-home-ui.php
++++ b/lib/admin-home-ui.php
+@@ -131,7 +131,7 @@
+ 	echo print_menurow_index('xmlTemplates', 'XML templates', '', $what_ui);
+ 	echo print_menurow_index('metadataTemplates', 'Metadata templates', '', $what_ui);
+ 	echo print_menurow_index('catdescTemplates', 'Catdesc templates', '', $what_ui);
+-	echo print_menurow_index('visualisationTemplates', 'Visualisation templates', '', $what_ui);
++	echo print_menurow_index('visualisationTemplates', 'Visualization templates', '', $what_ui);
+ 	
+ 	echo print_menurow_heading('Users and privileges');
+ 	echo print_menurow_index('userAdmin', 'Manage users', '', $what_ui);
+@@ -148,10 +148,15 @@
+ 	
+ 	
+ 	echo print_menurow_heading('Frontend interface');
++	echo print_menurow_index('cpPersonalize', 'Personalization', '', $what_ui); /* cqpweb-new-ui */
++	echo print_menurow_index('appearance', 'Appearance', '', $what_ui); /* cqpweb-new-ui */
++	echo print_menurow_index('cpSite', 'Maintenance mode', '', $what_ui); /* cqpweb-new-ui */
+ 	echo print_menurow_index('systemMessages', 'System messages', '', $what_ui);
++	echo print_menurow_index('cpNews', 'News page', '', $what_ui); /* cqpweb-new-ui */
+ // 	echo print_menurow_index('skins', 'Skins and colours', '', $what_ui);
+ 	echo print_menurow_index('mappingTables', 'Mapping tables', '', $what_ui);
+ 	echo print_menurow_index('manageEmbeds', 'Embedded pages', '', $what_ui);
++	echo print_menurow_index('cpPages', 'Edit user pages', '', $what_ui); /* cqpweb-new-ui */
+ 	
+ 	echo print_menurow_heading('Cache control');
+ 	echo print_menurow_index('queryCacheControl', 'Query cache', '', $what_ui);
+@@ -164,6 +169,7 @@
+ 	echo print_menurow_index('cwbFileMonitor', 'CWB file monitor', '', $what_ui);
+ 	
+ 	echo print_menurow_heading('Backend system');
++	echo print_menurow_index('cpMail', 'E-mail', '', $what_ui); /* cqpweb-new-ui */
+ 	echo print_menurow_index('systemSettings', 'System settings', '', $what_ui);
+ 	echo print_menurow_index('manageProcesses', 'Manage SQL processes', '', $what_ui);
+ 	echo print_menurow_index('tableView', 'View an SQL table', '', $what_ui);
+@@ -179,12 +185,12 @@
+ 	echo print_menurow_index('userStatistics', 'User statistics', '', $what_ui);
+ 	echo print_menurow_index('queryStatistics', 'Query statistics', '', $what_ui);
+ 	echo print_menurow_index('clearQueryHistory', 'Clear history', '', $what_ui);
+-	echo print_menurow_heading('Exit');
++	echo print_menurow_heading('Homepage'); /* cqpweb-new-ui: was "Exit" */
+ 	
+ 	?>
+ 
+-	<a id="linkExitHomepage" class="menuItem" href="../" data-tooltip="Go to a list of all corpora on the CQPweb system">
+-		Exit to CQPweb homepage
++	<a id="linkExitHomepage" class="menuItem" href="../" data-tooltip="Go to the homepage">
++		<?php require_once('../lib/cqpweb-new-ui/brand-lib.php'); echo escape_html(cp_site_name()); /* cqpweb-new-ui */ ?> homepage
+ 	</a>
+ </nav>
+ 
+@@ -332,8 +338,44 @@
+ 	do_adm_ui_viewinstallers();
+ 	break;
+ 
++case 'cpSite':
++	require_once('../lib/cqpweb-new-ui/site-ui.php');
++	cp_site_admin_ui();
++	break;
++
++case 'cpPersonalize':
++	/* cqpweb-new-ui: site name, logo, icons, texts, query defaults, public documentation (lib/cqpweb-new-ui/personalize-ui.php) */
++	require_once('../lib/cqpweb-new-ui/personalize-ui.php');
++	cp_personalize_admin_ui();
++	break;
++
++case 'cpMail':
++	/* cqpweb-new-ui: sending e-mail through an SMTP server, with a step-by-step guide (lib/cqpweb-new-ui/mail-ui.php) */
++	require_once('../lib/cqpweb-new-ui/mail-ui.php');
++	cp_mail_admin_ui();
++	break;
++
++case 'appearance':
++	/* cqpweb-new-ui: colours, fonts and day/night mode (lib/cqpweb-new-ui/appearance-ui.php) */
++	require_once('../lib/cqpweb-new-ui/appearance-ui.php');
++	cp_appearance_admin_ui();
++	break;
++case 'cpPages':
++	/* cqpweb-new-ui: edit the HTML pages in the user pages folder (lib/cqpweb-new-ui/pages-ui.php) */
++	require_once('../lib/cqpweb-new-ui/pages-ui.php');
++	cp_pages_admin_ui();
++	break;
++
++case 'cpNews':
++	/* cqpweb-new-ui: edit the public news page (lib/cqpweb-new-ui/news-ui.php) */
++	require_once('../lib/cqpweb-new-ui/news-ui.php');
++	cp_news_admin_ui();
++	break;
++
+ case 'systemMessages':
+-	do_adm_ui_systemannouncements();
++	/* cqpweb-new-ui: system messages can be edited as well as added and deleted (lib/cqpweb-new-ui/sysmsg-ui.php) */
++	require_once('../lib/cqpweb-new-ui/sysmsg-ui.php');
++	cp_sysmsg_admin_ui();
+ 	break;
+ 
+ // case 'skins':

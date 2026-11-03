@@ -1,0 +1,23 @@
+--- a/lib/db-lib.php
++++ b/lib/db-lib.php
+@@ -72,7 +72,7 @@
+ 			DB_TYPE_DIST     => 'Distribution', 
+ 			DB_TYPE_COLLOC   => 'Collocation', 
+ 			DB_TYPE_SORT     => 'Sort', 
+-			DB_TYPE_CATQUERY => 'Categorisation'
++			DB_TYPE_CATQUERY => 'Categorization'
+ 			// FIXME parlink 
+ 	];
+ 	
+@@ -233,7 +233,11 @@
+ 	
+ 	/* register this script as working to create a DB, after checking there is room for it */
+ 	if ( !check_sql_max_processes(DbType::HANDLE_FRAG[$db_type->type]) )
++	{
++		/* cqpweb-new-ui: remove the record just made, so that the automatic retry builds the table afresh */
++		do_sql_query("delete from saved_dbs where id = $db_id");
+ 		exiterror_toomanydbprocesses(DbType::HANDLE_FRAG[$db_type->type]);
++	}
+ 	
+ 	register_sql_process($tbl, DbType::HANDLE_FRAG[$db_type->type]);
+ 	

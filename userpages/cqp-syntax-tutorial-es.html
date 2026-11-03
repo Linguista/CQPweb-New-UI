@@ -1,0 +1,653 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<!-- Scotts Text Styles For Tutorial-->
+	<style type="text/css">
+		<!--
+		.Default-Red {color: #990000; font-weight: bold; }
+		.Default-Blue {color: #0000FF; font-weight: bold; }
+		.Default-Green {color: #009900; font-weight: bold; }
+		.Default-Purple {color: #9900FF; font-weight: bold;}
+		.Mono-Black {font-family: monospace, Courier, "Courier New"; color: #000000; font-weight: bold; }
+		.Mono-Red {font-family: monospace, Courier, "Courier New"; color: #990000; font-weight: bold; }
+		.Mono-Blue {font-family: monospace, Courier, "Courier New"; color: #0000FF; font-weight: bold; }
+		.Mono-Green {font-family: monospace, Courier, "Courier New"; color: #009900; font-weight: bold; }
+		.Mono-Magenta {font-family: monospace, Courier, "Courier New"; color: #CC33FF; font-weight: bold; }
+		.Mono-Purple {font-family: monospace, Courier, "Courier New"; color: #9900FF; font-weight: bold; }
+		.Mono-Orange {font-family: monospace, Courier, "Courier New"; color: #CC6600; font-weight: bold; }
+		.Mono-Black-Italics {font-family: monospace, Courier, "Courier New"; color: #000000; font-weight: normal; font-style: italic; }
+		.H3-Red {font-family: monospace, Courier, "Courier New"; color: #990000; }
+		.Mono-NoBold-Black {color: #000000; font-family: monospace, Courier, "Courier New";}
+		-->
+	</style>
+
+	<!-- CQPweb application data -->
+	<meta
+		id="CQPwebGlobalApplicationData"
+		name="application-name" 
+		content="CQPweb"
+
+		data-urlPrefix="../"
+	>
+	<title>Tutorial sobre la sintaxis de búsqueda CQP</title>
+	
+	<script src="../jsc/jquery.js"></script>
+	<script defer src="../jsc/always.js"></script>
+
+	<script defer src="../jsc/tooltip.js"></script>
+	<script defer src="../jsc/cword.js"></script>
+	<script defer src="../jsc/queryhome.js"></script>
+	<script defer src="../jsc/metadata-embiggen.js"></script>
+
+</head>
+
+<body>
+
+<h2>Contenido</h2>
+<ul>
+  <li><a href="#introduction">Introducción</a></li>
+  <li><a href="#query_basics">Fundamentos de las búsquedas</a></li>
+  <li><a href="#flags">Opciones</a></li>
+  <li><a href="#language_notes">Notas lingüísticas</a></li>
+  <li><a href="#search_operators">Operadores de búsqueda</a> </li>
+  <li><a href="#querying_different_keys">Buscar dentro de distintas variables</a>
+    <ul>
+      <li><a href="#key_lemma">Lema</a></li>
+      <li><a href="#key_pos">Categoría gramatical completa (POS)</a></li>
+      <li><a href="#key_spos">Categoría gramatical breve (POS breve)</a></li>
+      <li><a href="#key_tag">Tag</a></li>
+      <li><a href="#key_subtag">Subtag</a></li>
+      </ul>
+  </li>
+  <li><a href="#querying_multiple_values">Buscar valores múltiples</a></li>
+  <li><a href="#querying_phrases_or_sequences">Buscar frases o secuencias</a></li>
+  <li><a href="#querying_multiple_keys">Buscar en múltiples variables dentro de un único token o &quot;slot&quot; </a></li>
+  <li><a href="#regular_expressions">Expresiones regulares
+    </a>
+    <ul>
+      <li><a href="#regex_character_classes">Clases de caracteres </a></li>
+      <li><a href="#regex_quantifiers">Cuantificadores</a></li>
+      <li><a href="#reserved_characters">Caracteres reservados</a></li>
+      </ul>
+  </li>
+  <li><a href="#special_operators">Operadores especiales</a> </li>
+  <li><a href="#sample_queries">Ejemplos de las búsquedas</a></li>
+  <li><a href="#troubleshooting">Resolución de problemas</a> </li>
+  </ul>
+<p>&nbsp;</p>
+<h2><a name="introduction"></a>Introducción</h2>
+<p>El software <a href="https://cwb.sourceforge.io/cqpweb.php" target="_blank">CQPweb</a>, que proporciona la tecnología de búsqueda de este sitio, cuenta con dos modos de búsqueda. </p>
+<p>El primer modo de búsqueda, que está seleccionado por defecto, es el modo <strong>Simple Query</strong> (<em>búsqueda simple</em>). Existen dos variedades de Simple Query: <em>ignore case</em> (no distingue entre mayúsculas y minúsculas) y <em>case-sensitive</em> (sí distingue entre mayúsculas y minúsculas). La variedad <em>ignore case</em> trata <span class="Mono-Black">KAOS</span>, <span class="Mono-Black">Kaos</span> y <span class="Mono-Black">kaos</span> como la misma palabra, mientras que la variedad <em>case-sensitive </em>las trata como tres palabras distintas. Aparte de eso, son idénticas. En este sitio, las búsquedas normalmente no distinguen entre mayúsculas y minúsculas a menos que marques la casilla <strong>Case-sensitive</strong> junto al menú del modo de búsqueda; la casilla funciona en ambos modos de búsqueda, y tu navegador recuerda tu elección. El modo Simple Query puede usarse para realizar búsquedas simples sin contar con conocimientos previos del software. Para mayores informaciones sobre este modo de búsqueda, haz clic en el enlace que está a la derecha del botón Modo en el formulario de búsqueda.</p>
+<p>El segundo modo de búsqueda se conoce como el modo <strong>CQP syntax</strong>. Permite realizar búsquedas complejas y potentes. Pero utilizar este modo no es del total intuitivo. El objetivo de este tutorial es proporcionar a los usuarios una razonable proficiencia con este tipo de búsquedas.</p>
+<p>&nbsp;</p>
+<h2><a name="query_basics"></a>Fundamentos de las búsquedas </h2>
+<p>En su forma más sencilla, las búsquedas mediante la sintaxis CQP consisten en una expresión entre corchetes que contiene una <span class="Default-Red">variable</span>, un <span class="Default-Blue">operador</span> y un <span class="Default-Green">valor</span> dentro de comillas, como por ejemplo <span class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">perro</span>&quot;]</span>. A los valores se les puede agregar optativamente una <span class="Default-Purple"><strong>opción</strong> </span>después de la segunda comilla (para más detalles, ver abajo). Cada expresión dentro de corchetes busca dentro de un solo token o &quot;slot&quot;. Para buscar una frase, se utiliza una serie de expresiones entre corchetes. Por defecto, las búsquedas pueden traspasar las fronteras de los enunciados, que no es particularmente deseable. Para restringir las búsquedas a un solo enunciado, ver <a href="#special_operators">Operadores especiales</a>.</p>
+<p>Nótese que al contrario de los motores de búsqueda, que tratan las búsquedas con múltiples palabras como una gran &quot;bolsa de palabras&quot; (e.g. <span class="Mono-Black">team sports</span> recuperará toda página que contenga las palabras <span class="Mono-Black">team</span> y <span class="Mono-Black">sports</span> en alguna parte), todas las búsquedas CQP son posicionales. Esto quiere decir que cada palabra que se busca representa un token o &quot;slot&quot; diferente y secuencial en el texto, de modo que la búsqueda de <span class="Mono-Black">team sports</span> (o, más precisamente de <span class="Mono-Black">[</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">team</span><span class="Mono-Black">&quot;] [</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">sports</span><span class="Mono-Black">&quot;]</span>) sólo recuperará instancias de esta <em>frase</em> (<span class="Mono-Black">team sports</span>) y no frases como <span class="Mono-Black">sports team</span> o <span class="Mono-Black">a team that sports colorful uniforms</span>. </p>
+<p>&nbsp;</p>
+<h2><a name="flags"></a>Opciones</h2>
+<p>En este sitio, las búsquedas son <em>case-insensitive</em> por defecto (no distinguen entre mayúsculas y minúsculas), de modo que <span class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">perro</span>&quot;]</span> recuperará <span class="Mono-Black"><strong>perro</strong></span>, <span class="Mono-Black"><strong>Perro</strong></span>, <span class="Mono-Black"><strong>PerrO</strong></span> y <span class="Mono-Black"><strong>PERRO</strong></span> por igual, ya que las diferencias entre mayúsculas y minúsculas muy rara vez son de interés lingüístico. Internamente, el sitio agrega la opción <span class="Mono-Magenta">%c</span> a cada valor de tu búsqueda, y por eso la búsqueda que aparece sobre los resultados contiene <span class="Mono-Magenta">%c</span> aunque no la hayas escrito. (El CQP estándar, y la mayoría de los demás sitios CQPweb, funcionan al revés: las búsquedas distinguen entre mayúsculas y minúsculas a menos que se agregue <span class="Mono-Magenta">%c</span>. Aquí puedes seguir escribiendo <span class="Mono-Magenta">%c</span>; no causa ningún problema.)</p>
+<p>Hay dos maneras de realizar una búsqueda <em>case-sensitive</em>. Para que toda la búsqueda distinga entre mayúsculas y minúsculas, marca la casilla <strong>Case-sensitive</strong> junto al menú del modo de búsqueda. Para que solo un valor las distinga, agrega la opción <span class="Mono-Magenta">%C</span> (con <span class="Mono-Black">C</span> mayúscula) después de su comilla de cierre: <span class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">Perro</span>&quot;<span class="Mono-Magenta">%C</span>]</span> recuperará <span class="Mono-Black"><strong>Perro</strong></span> pero <em>no</em> <span class="Mono-Black"><strong>perro</strong></span> ni <span class="Mono-Black"><strong>PERRO</strong></span>, mientras que el resto de la búsqueda sigue sin distinguirlas. <span class="Mono-Magenta">%C</span> es un agregado del software de este sitio, no forma parte de la sintaxis CQP estándar, y se puede combinar con <span class="Mono-Magenta">%d</span> (ver abajo) de esta manera: <span class="Mono-Magenta">%Cd</span>.</p>
+<p>Por defecto, las búsquedas también son sensibles a los diacríticos, es decir, <span class="Mono-Black"><strong>canto</strong></span> y <span class="Mono-Black"><strong>cantó</strong></span> serán tratadas como palabras distintas. En aquellas lenguas en las cuales los diacríticos se utilizan sistemáticamente, ésta es la manera de que normalmente conviene realizar búsquedas. Sin embargo, si los textos fuentes del corpus constan de transcripciones del habla, contenido generado por los usuarios (e-mail, redes sociales, comentarios en sitios, etc.) u otros textos cuya transcripción u ortografía es menos que perfecta, podría resultar útil realizar una búsqueda que no tome en cuenta los diacríticos. Esto se hace agregando la opción <span class="Mono-Magenta">%d</span> después de la comilla de cierre, e.g. <span class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">cachai</span>&quot;<span class="Mono-Magenta">%d</span>]</span>. Esto recuperará tanto <span class="Mono-Black"><strong>cachai</strong></span> como <span class="Mono-Black"><strong>cachái</strong></span>. La búsqueda <span class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">cachái</span>&quot;<span class="Mono-Magenta">%d</span>]</span> generará exactamente los mismos resultados.</p>
+<p>Las dos opciones se pueden combinar de esta manera: <span class="Mono-Magenta">%cd</span>. </p>
+<p>&nbsp;</p>
+<h2><a name="language_notes" id="language_notes"></a>Notas lingüísticas</h2>
+<p>Si tus búsquedas no están arrojando los resultados que esperas, revisa lo siguiente:</p>
+<ul>
+  <li>Las contracciones como <span class="Mono-Black">al</span> y <span class="Mono-Black">del</span> se separan en sus constituyentes: <span class="Mono-Black">a el</span> y <span class="Mono-Black">de el</span>. Por ende, para buscar <span class="Mono-Black">del hombre</span> se utiliza la siguiente búsqueda: <span class="Mono-Black">[</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">de</span><span class="Mono-Black">&quot;] [</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">el</span><span class="Mono-Black">&quot;] [</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">hombre</span><span class="Mono-Black">&quot;]</span> (o, mejor aún, <span class="Mono-Black">[</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">de</span><span class="Mono-Black">&quot;<span class="Mono-Magenta">%c</span>] [</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">el</span><span class="Mono-Black">&quot;<span class="Mono-Magenta">%c</span>] [</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">hombre</span><span class="Mono-Black">&quot;<span class="Mono-Magenta">%c</span>]</span>). </li>
+  <li>Es posible que los nombres propios pluriverbales figuren como un solo token en el cual las palabras constituyentes están separadas por <span class="Mono-Black">_</span>. Para buscar <span class="Mono-Black">El Mercurio</span>, por ejemplo, utiliza la expresión de búsqueda <span class="Mono-Black">[</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">el_mercurio</span><span class="Mono-Black">&quot;</span><span class="Mono-Magenta">%c</span><span class="Mono-Black">]</span>. En una futura versión de nuestros corpora, esta situación podría cambiar. </li>
+  <li>Los lemas de ciertas palabras son poco intuitivos. Casi siempre son palabras gramaticales. Algunos ejemplos:
+    <ul>
+      <li>El lema de <span class="Mono-Black">el</span>, <span class="Mono-Black">la</span>, <span class="Mono-Black">los</span>, <span class="Mono-Black">las</span> y <span class="Mono-Black">lo</span> es <span class="Mono-Green">el</span></li>
+      <li>El lema de <span class="Mono-Black">algún</span>, <span class="Mono-Black">alguno</span>, <span class="Mono-Black">alguna</span>, <span class="Mono-Black">algunos</span> y <span class="Mono-Black">algunas</span> es <span class="Mono-Green">alguno</span></li>
+      <li>El lema de <span class="Mono-Black">este</span>, <span class="Mono-Black">esto</span>, <span class="Mono-Black">esta</span>, <span class="Mono-Black">estos</span> y <span class="Mono-Black">estas</span> es <span class="Mono-Green">este</span>.</li>
+      <li>El lema de <span class="Mono-Black">él</span> y <span class="Mono-Black">ella</span> es <span class="Mono-Green">él</span>. </li>
+    </ul>
+  </li>
+  </ul>
+<p>&nbsp; </p>
+<h2><a name="search_operators" id="search_operators"></a>Operadores de búsqueda</h2>
+<p>Los operadores de búsqueda se utilizan para construir expresiones de búsqueda. Permiten especificar si quieres incluir o excluir ciertos <span class="Default-Green">valores</span> de una determinada <span class="Default-Red">variable</span>, seleccionar múltiples <span class="Default-Red">variables</span>, buscar en múltiples <span class="Default-Green">valores</span>, buscar todo lo que cumpla con un determinado conjunto de criterios, etc.</p>
+<table width="1057" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="118"><strong>OPERADOR</strong></td>
+    <td width="190"><strong>SIGNIFICADO</strong></td>
+    <td width="342"><strong>EJEMPLO</strong></td>
+    <td width="407"><strong>RESULTADO</strong></td>
+  </tr>
+  <tr>
+    <td class="Mono-Blue">=</td>
+    <td>igual a</td>
+    <td class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">amigo</span>&quot;]</td>
+    <td>Todos los alomorfos de <span class="Mono-Black">amigo</span>: <span class="Mono-Black">amigo</span>, <span class="Mono-Black">amiguita</span>, etc. </td>
+  </tr>
+  <tr>
+    <td class="Mono-Blue">!=</td>
+    <td>no igual a </td>
+    <td class="Mono-Black">[<span class="Mono-Red">tag</span><span class="Mono-Blue">!=</span>&quot;<span class="Mono-Green">V</span>&quot;]</td>
+    <td>Todas las palabras que <em>no</em> estén etiquetadas como verbos. </td>
+  </tr>
+  <tr>
+    <td class="Mono-Blue">&amp;</td>
+    <td>y</td>
+    <td class="Mono-Black">[<span class="Mono-Red">word<span class="Mono-Blue">=</span></span>&quot;<span class="Mono-Red"><span class="Mono-Green">canto</span></span>&quot; <span class="Mono-Blue">&amp;</span> <span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">N</span>&quot;]</td>
+    <td>Todos los casos en que la palabra <span class="Mono-Black">canto</span> está etiquetada como sustantivo. </td>
+  </tr>
+  <tr>
+    <td class="Mono-Blue">|</td>
+    <td>o</td>
+    <td class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">perro</span><span class="Mono-Blue">|</span><span class="Mono-Green">gato</span>&quot;]</td>
+    <td>Todos los casos de las palabras <span class="Mono-Black">perro</span> o <span class="Mono-Black">gato</span>. </td>
+  </tr>
+  <tr>
+    <td class="Mono-Blue">!</td>
+    <td>no</td>
+    <td class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">ir</span>&quot; <span class="Mono-Blue">&amp;</span> <span class="Mono-Blue">!</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">fue</span><span class="Mono-Blue">|</span><span class="Mono-Green">fuimos</span>&quot;]</td>
+    <td>Todos los alomorfos de <span class="Mono-Black">ir</span> <em>excepto</em> <span class="Mono-Black">fue</span> o <span class="Mono-Black">fuimos</span>. </td>
+  </tr>
+  <tr>
+    <td class="Mono-Blue">( ) </td>
+    <td><em>Agrupa ítemes </em></td>
+    <td class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">p<span class="Mono-Blue">(</span>re</span><span class="Mono-Blue">|</span><span class="Mono-Green">os</span><span class="Mono-Blue">|</span><span class="Mono-Green">ost</span><span class="Mono-Blue">)</span><span class="Mono-Green">natal</span>&quot;]</td>
+    <td>Las palabras <span class="Mono-Black">prenatal</span>, <span class="Mono-Black">posnatal</span> y <span class="Mono-Black">postnatal</span>. </td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<h2><a name="querying_different_keys"></a>Buscar dentro de distintas variables</h2>
+<p>A lo mejor te has preguntado por qué es necesario colocar <span class="Mono-Red">word</span> en todas las expresiones de búsqueda. En estricto rigor, no lo es: en vez de <span class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">canto</span>&quot;<span class="Mono-Magenta">%d</span>]</span> se puede ingresar tan solo <span class="Mono-Black">&quot;<span class="Mono-Green">canto</span>&quot;<span class="Mono-Magenta">%d</span></span>, por ejemplo. Pero es bueno acostumbrarse a utilizar la estructura completa de las búsquedas, ya que la forma abreviada sólo permite buscar dentro de la variable <span class="Mono-Red">word</span>, y la mayoría de los corpora (incluyendo el COSCACH, el corpus de castellano oral de Chile que se usa en los ejemplos de este tutorial) contienen varias otras variables que son muy útiles, pero que deben especificarse explícitamente. </p>
+<p>Cuando eliges el modo de búsqueda CQP syntax aparecen tres listas debajo del botón <em>Start Query</em>. Son los p-attributes, s-attributes y a-attributes del corpus. Los p-attributes son las variables que están disponibles para las búsquedas. El COSCACH contempla seis de estas variables, las cuales se detallan en la siguiente tabla (otros corpus tienen las suyas):</p>
+<table width="966" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="234"><strong>VARIABLE (P-ATTRIBUTE) </strong></td>
+    <td width="536"><strong>DESCRIPCIÓN</strong></td>
+    <td width="196"><strong>EJEMPLO </strong></td>
+  </tr>
+  <tr>
+    <td class="Mono-Red"><span class="Mono-Red">word</span></td>
+    <td>Palabras normales (formas). </td>
+    <td class="Mono-Black">comiéramos</td>
+  </tr>
+  <tr>
+    <td height="22" class="Mono-Red"><span class="Mono-Red">Lema</span></td>
+    <td>Lemas (lo que se busca en un diccionario). </td>
+    <td class="Mono-Black">comer</td>
+  </tr>
+  <tr>
+    <td class="Mono-Red"><span class="Mono-Red">pos</span></td>
+    <td>Categoría gramatical completa.</td>
+    <td class="Mono-Black">VMSI1P0</td>
+  </tr>
+  <tr>
+    <td class="Mono-Red"><span class="Mono-Red">spos</span></td>
+    <td>Categoría gramatical breve.</td>
+    <td class="Mono-Black">VMS</td>
+  </tr>
+  <tr>
+    <td class="Mono-Red"><span class="Mono-Red">tag</span></td>
+    <td>Etiqueta de una letra que representa la categoría gramatical más básica.</td>
+    <td class="Mono-Black">V</td>
+  </tr>
+  <tr>
+    <td class="Mono-Red"><span class="Mono-Red">subtag</span></td>
+    <td>Subetiqueta de tres letras que representa el segundo nivel de la categoría gramatical.</td>
+    <td class="Mono-Black">mai</td>
+  </tr>
+</table>
+<p>Los nombres de las variables son <em>case-sensitive</em> (sensibles a la diferencia entre mayúsculas y minúsculas), y por ende deben ingresarse siempre con <em>minúsculas</em>. En este sitio, los valores que contienen las variables no distinguen entre mayúsculas y minúsculas por defecto, tal como se explica en <a href="#flags">Opciones</a> más arriba. Si marcas la casilla <strong>Case-sensitive</strong> o usas la opción <span class="Mono-Magenta">%C</span>, recuerda que los valores de <span class="Mono-Red">lema</span> y <span class="Mono-Red">subtag</span> siempre usan minúsculas, mientras que los de <span class="Mono-Red">pos</span>, <span class="Mono-Red">spos</span> y <span class="Mono-Red">tag</span> usan mayúsculas.</p>
+<p>Ya hemos examinado la variable <span class="Mono-Red">word</span>. Ahora, veamos qué contienen las demás variables y para qué sirven. </p>
+<h3><span class="Estilo7"><a name="key_lemma"></a></span>Lema (<span class="Estilo7"><span class="H3-Red">lemma</span></span>)</h3>
+<p>El lema es la forma de la palabra que se busca en el diccionario (e.g. <span class="Mono-Black">ser</span>, y no <span class="Mono-Black">fuiste</span>, <span class="Mono-Black">serías</span> o <span class="Mono-Black">siendo</span>). Un lema comprende todas las variantes morfológicas de una palabra (sus alomorfos).</p>
+<p>Al trabajar con el castellano, que es una lengua de mayor complejidad morfológica que el inglés, las búsquedas por lema son la única manera conveniente de trabajar con los sustantivos y adjetivos, y son la única manera viable de trabajar con los verbos. Una búsqueda tan sencilla como <span class="Mono-Black"><strong>[</strong></span><span class="Estilo7"><strong><span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span></strong></span><span class="Mono-Black"><strong>&quot;</strong></span><span class="Estilo7"><strong><span class="Mono-Green">amigo</span></strong></span><span class="Mono-Black"><strong>&quot;]</strong></span> recoge <span class="Mono-Black">amigo</span>, <span class="Mono-Black">amiga</span>, <span class="Mono-Black">amigos</span>, <span class="Mono-Black">amigas</span>, <span class="Mono-Black">amiguito</span>, <span class="Mono-Black">amiguitos</span>, <span class="Mono-Black">amiguita</span> y <span class="Mono-Black">amiguitas</span>, además de <span class="Mono-Black">Amigo</span>, <span class="Mono-Black">Amiga</span>, <span class="Mono-Black">Amigos</span>, <span class="Mono-Black">Amigas</span>, <span class="Mono-Black">Amiguito</span>, <span class="Mono-Black">Amiguitos</span>, <span class="Mono-Black">Amiguita</span> y <span class="Mono-Black">Amiguitas</span>. También recoge <span class="Mono-Black">AMIGO</span>, <span class="Mono-Black">aMiGo</span>, <span class="Mono-Black">amiGO</span> y otras formas que varían en su uso de mayúsculas y minúsculas. Una vez que empieces a usar los lemas, sólo volverás a usar palabras para fines muy específicos.</p>
+<p>En las búsquedas según <span class="Mono-Red">lema</span>, no hace falta usar la opción <span class="Mono-Magenta">%c</span> porque el etiquetador que usamos (la versión <a href="https://github.com/Linguista/FreeLing-es_CL" target="_blank">chilena</a> de <a href="https://nlp.lsi.upc.edu/freeling/index.php/node/1" target="_blank">FreeLing</a>) no distingue entre mayúsculas y minúsculas. </p>
+<h3><span class="Estilo7"><a name="key_pos"></a></span>Categoría gramatical (<span class="Estilo7"><span class="H3-Red">pos</span></span>)</h3>
+<p>Esta variable contiene la categoría gramatical completa (POS) que FreeLing asigna a cada palabra. Para buscar todos los sustantivos comunes femeninos plurales, por ejemplo, se emplea la siguiente búsqueda: <span class="Mono-Black"><strong>[</strong></span><span class="Estilo7"><strong><span class="Mono-Blue"><strong><span class="Mono-Red">pos</span></strong>=</span></strong></span><span class="Mono-Black"><strong>&quot;</strong></span><span class="Estilo7"><strong><span class="Mono-Green">NCFP000</span></strong></span><span class="Mono-Black"><strong>&quot;]</strong></span>. Para buscar todos los verbos auxiliares de primera persona del singular en modo subjuntivo, se utiliza esta búsqueda: <span class="Mono-Black"><strong>[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">VASP1S0</span>&quot;]</strong></span>. El uso de <a href="#regular_expressions">expresiones regulares</a> al realizar búsquedas en la variable <span class="Mono-Red">pos</span> brinda un gran abanico de posibilidades. La estructura de las etiquetas de categoría gramatical se detalla en la página <em>Tagset: POS Full </em>en la sección <em>Corpus info</em> de la columna izquierda. </p>
+<h3 class="Estilo7"><a name="key_spos"></a>Categoría gramatical breve (<span class="H3-Red">spos</span>)</h3>
+<p>Esta variable contiene la categoría gramatical breve. Contiene menos información que la categoría gramatical completa, obviamente, pero cuando no se necesita toda la información puede resultar más rápido y conveniente buscar en esta variable. Las búsquedas en <strong><span class="Mono-Red">spos</span></strong> tienen la forma de <span class="Mono-Black"><strong>[</strong></span><span class="Estilo7"><strong><span class="Mono-Red">spos</span><span class="Mono-Blue">=</span></strong></span><span class="Mono-Black"><strong>&quot;</strong></span><span class="Estilo7"><strong><span class="Mono-Green">NC</span></strong></span><span class="Mono-Black"><strong>&quot;]</strong></span><strong>, </strong><span class="Mono-Black"><strong>[</strong></span><span class="Estilo7"><strong><span class="Mono-Red">spos</span><span class="Mono-Blue">=</span></strong></span><span class="Mono-Black"><strong>&quot;</strong></span><span class="Estilo7"><strong><span class="Mono-Green">VAS</span></strong></span><span class="Mono-Black"><strong>&quot;]</strong></span>, etc. La estructura de las etiquetas de categoría gramatical breve se detalla en la página <em>Tagset: POS Short</em> en la sección <em>Corpus info</em> de la columna izquierda. </p>
+<h3 class="Estilo7"><a name="key_tag"></a>Etiqueta (<span class="H3-Red">tag</span>)</h3>
+<p>Esta variable contiene códigos de una letra que representan la categoría gramatical más básica (e.g. sustantivo, verbo, adjetivo). Estos códigos son limitados, pero también muy convenientes, ya que son breves e intuitivas: <span class="Mono-Black"><strong>[</strong></span><span class="Estilo7"><strong><span class="Mono-Red">tag</span></strong><span class="Mono-Blue">=</span></span><span class="Mono-Black"><strong>&quot;</strong></span><span class="Estilo7"><strong><span class="Mono-Green">N</span></strong></span><span class="Mono-Black"><strong>&quot;]</strong></span> recoge sustantivos, <span class="Mono-Black"><strong><strong>[</strong></strong></span><span class="Estilo7"><strong><strong><span class="Mono-Red">tag</span></strong><span class="Mono-Blue">=</span></strong></span><span class="Mono-Black"><strong><strong>&quot;</strong></strong></span><span class="Estilo7"><strong><strong><span class="Mono-Green">V</span></strong></strong></span><span class="Mono-Black"><strong><strong>&quot;]</strong></strong></span> recoge verbos, etc. La estructura de las etiquetas se detalla en la página <em>Tagset: Tags &amp; Subtags</em> en la sección <em>Corpus info</em> de la columna de la izquierda. </p>
+<h3 class="Estilo7"><a name="key_subtag"></a>Subetiqueta (<span class="H3-Red">subtag</span>)</h3>
+<p>Esta variable contiene códigos de tres letras que representan información gramatical de <em>segundo nivel</em>. En el caso de los sustantivos, por ejemplo, esta variable puede ser <span class="Mono-Green">com</span> o <span class="Mono-Green">prp</span> (común o propio); en el caso de los verbos, puede ser <span class="Mono-Green">aux</span> (auxiliar), <span class="Mono-Green">mai</span> (principal) o <span class="Mono-Green">sem</span> (semiauxiliar); etcétera. Toda subetiqueta es única, así que también codifica implícitamente la categoría gramatical principal. <span class="Mono-Black"><strong> [</strong></span><span class="Estilo7"><strong><span class="Mono-Red">subtag</span></strong><span class="Mono-Blue">=</span></span><span class="Mono-Black"><strong>&quot;</strong></span><span class="Estilo7"><strong><span class="Mono-Green">mai</span></strong></span><span class="Mono-Black"><strong>&quot;]</strong></span> recogerá verbos principales exclusivamente, por ejemplo. La estructura de las subetiquetas se detalla en la página <em>Tagset: Tags &amp; Subtags</em> en la sección <em>Corpus info</em> de la columna izquierda. </p>
+<p>&nbsp;</p>
+<h2><a name="querying_multiple_values"></a>Buscar valores múltiples in a single variable </h2>
+<p>Hasta ahora, hemos visto cómo se busca un solo valor dentro de una variable, como los alomorfos del sustantivo <span class="Mono-Black"><strong>perro</strong></span>: <span class="Mono-Black">[<span class="Mono-Red">lemma</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">perro</span>&quot;]</span>. Sin embargo, es bastante común (y útil) buscar una serie de valores, como un campo léxico o varias clases de verbos. Para hacerlo, se ingresan múltiples ítemes, separándolos con la barra vertical (<span class="Mono-Blue">|</span>). Así, <span class="Mono-Black">[</span><span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span><span class="Mono-Black">&quot;</span><span class="Mono-Green">perro</span><span class="Mono-Blue">|</span><span class="Mono-Green">gato</span><span class="Mono-Blue">|</span><span class="Mono-Green">catita</span><span class="Mono-Blue">|</span><span class="Mono-Green">pez</span><span class="Mono-Blue">|</span><span class="Mono-Green">gallina</span><span class="Mono-Black">&quot;]</span> recogerá todos los alomorfos de estos cinco lemas, mientras que <span class="Mono-Black">[</span><span class="Mono-Red">spos</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">VAI</span><span class="Mono-Blue">|</span><span class="Mono-Green">VAS</span><span class="Mono-Black">&quot;]</span> recogerá todos los verbos auxiliares indicativos y subjuntivos. </p>
+<p>&nbsp;</p>
+<h2><a name="querying_phrases_or_sequences" id="querying_phrases_or_sequences"></a>Buscar frases o secuencias de variables</h2>
+<p>Se pueden utilizar múltiples expresiones de búsqueda para halla frases o secuencias, e.g. <span class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">el</span>&quot;</span><span class="Mono-Magenta">%c</span><span class="Mono-Black">]</span> <span class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">perro</span>&quot;<span class="Mono-Magenta">%c</span>]</span> <span class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">vago</span>&quot;<span class="Mono-Magenta">%c</span>]</span> (recuerda que la opción <span class="Mono-Magenta">%c</span> hace que la búsqueda no distinga entre mayúsculas y minúsculas). Esta búsqueda recogerá todos los casos de la <em>frase </em><span class="Mono-Black">el perro vago</span> (pero al contrario de los motores de búsqueda, <em>no</em> recogerá textos en que estas palabras simplemente figuran en alguna parte de un texto). </p>
+<p>Desde luego, se puede utilizar cualquier combinación de variables en las búsquedas: <span class="Mono-Black">[<span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">D</span>&quot;]</span> <span class="Mono-Black">[<span class="Mono-Red">spos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">NP</span>&quot;]</span> <span class="Mono-Black">[<span class="Mono-Red">lemma</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">malo</span>&quot;]</span>recogerá todas las secuencias compuestas de un determinante seguido de un sustantivo propio y luego un alomorfo de <span class="Mono-Black">malo</span>. </p>
+<p>Para buscar en dos o más variables <em>no adyacentes</em>, se utiliza un par de corchetes vacíos (<span class="Mono-Black">[]</span>) además del <a href="#regex_quantifiers">cuantificador</a> que se estime pertinente (si no se usa ningún cuantificador, los corchetes vacíos recogerán exactamente un token). Esto funciona como una especie de comodín. La búsqueda <span class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">ser</span>&quot;]</span> <span class="Mono-Black">[]</span> <span class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">AQ</span>&quot;]</span> recogerá cualquier alomorfo de <span class="Mono-Black">ser</span> seguido de una palabra de cualquier tipo, y luego un adjetivo calificativo, e.g. <span class="Mono-Black">son muy buenos</span> o <span class="Mono-Black">es super joven</span>. La búsqueda <span class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">ser</span>&quot;]</span> <span class="Mono-Black">[]</span><span class="Mono-Orange">+</span> <span class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">AQ</span>&quot;]</span>, por el contrario, permite que haya uno o más tokens de cualquier tipo entre los alomorfos de <span class="Mono-Black">ser</span> y el adjetivo, mientras que <span class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">ser</span>&quot;]</span> <span class="Mono-Black">[]</span><span class="Mono-Orange">{</span><span class="Mono-Black">1</span><span class="Mono-Orange">,</span><span class="Mono-Black">4</span><span class="Mono-Orange">}</span> <span class="Mono-Black">[<span class="Mono-Red">spos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">AQ</span>&quot;]</span>permite que haya entre uno y cuatro tokens en esta posición.</p>
+<p>Para aumentar la precisión de las búsquedas, se pueden agregar criterios de exclusión a los corchetes (ya no) vacíos. Por ejemplo, los signos de puntuación pueden excluirse de la expresión &quot;comodín&quot; de la búsqueda anterior reemplazando <span class="Mono-Black">[</span><span class="Mono-Black">]</span> por <span class="Mono-Black">[</span><span class="Mono-Red">tag</span><span class="Mono-Blue">!=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">F</span><span class="Mono-Black">&quot;]</span>. </p>
+<p>Esto es similar al operador &quot;near&quot; que tienen algunos motores de búsqueda, pero no es idéntico: ese operador es bidireccional (<span class="Mono-Green">canción </span><span class="Mono-Blue">near</span><span class="Mono-Green"> melodía</span> recogerá tanto <span class="Mono-Black">la </span><span class="Mono-Green">canción</span><span class="Mono-Black"> tiene una </span><span class="Mono-Green">melodía</span> y <span class="Mono-Black">la </span><span class="Mono-Green">melodía</span><span class="Mono-Black"> de la </span><span class="Mono-Green">canción</span>), mientras que el comodín de los corchetes vacíos (o los corchetes con expresiones de exclusión) es unidireccional: <span class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">canción</span>&quot;]</span> <span class="Mono-Black">[]</span><span class="Mono-Orange">{</span><span class="Mono-Black">1</span><span class="Mono-Orange">,</span><span class="Mono-Black">4</span><span class="Mono-Orange">}</span> <span class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">melodía</span>&quot;]</span> sólo recogerá <span class="Mono-Black">la </span><span class="Mono-Green">canción</span><span class="Mono-Black"> tiene una </span><span class="Mono-Green">melodía</span><span class="Mono-Black"> bonita</span>.</p>
+<p>&nbsp;</p>
+<h2><a name="querying_multiple_keys"></a>Buscar en múltiples variables dentro de un único token o &quot;slot&quot; </h2>
+<p>Se puede buscar dentro de múltiples variables en un mismo token o &quot;slot&quot;. Esto permite refinar las búsquedas, y es especialmente útil para excluir los falsos positivos y resultados irrelevantes. Ya vimos un ejemplo de esto en la sección <a href="#ref_search_operators">Operadores de búsqueda</a>: <span class="Mono-Black">[<span class="Mono-Red">lemma=</span>&quot;<span class="Mono-Green">ir</span>&quot; <span class="Mono-Blue">&amp;</span> <span class="Mono-Blue">!</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">fue</span><span class="Mono-Blue">|</span><span class="Mono-Green">fuimos</span>&quot;]</span> recoge todas las formas del verbo <span class="Mono-Black">ir</span> salvo <span class="Mono-Black">fue</span> y <span class="Mono-Black">fuimos</span>. Las búsquedas con múltiples variables pueden incluir cualquiera de las variables del corpus, obviamente. Por ejemplo, podemos buscar todos los verbos en la variante en <span class="Mono-Black">-ra</span> del imperfecto del subjuntivo con <span class="Mono-Black">[</span><span class="Mono-Red">pos</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">V</span><span class="Mono-Purple">.</span><span class="Mono-Green">SI</span><span class="Mono-Purple">.</span><span class="Mono-Orange">+</span><span class="Mono-Black">&quot; &amp; </span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Purple">.</span><span class="Mono-Orange">+</span><span class="Mono-Green">ra</span><span class="Mono-Black">&quot;]</span> (la clase de caracteres <span class="Mono-Purple">.</span> y el cuantificador <span class="Mono-Orange">+</span> se explican en la sección <a href="#regular_expressions">Expresiones regulares</a>). </p>
+<p>&nbsp;</p>
+<h2><a name="regular_expressions"></a>Expresiones regulares</h2>
+<p>Las expresiones regulares son expresiones de búsqueda que emplean una combinación de caracteres normales y especiales. Son extremadamente poderosas, pero al comienzo pueden resultar confusas. Pero bien vale la pena aprender los fundamentos de las expresiones regulares.</p>
+<p>El modo de búsqueda CQP Syntax utiliza el estándar <a href="https://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions" target="_blank">PCRE</a> (Perl Compatible Regular Expressions) para las expresiones regulares, con una diferencia principal: las anclas de inicio (<span class="Mono-Black">^</span>) y final (<span class="Mono-Black">$</span>) de <em>string</em> se insertan automática e invisiblemente en todas las expresiones de búsqueda. Así, por ejemplo, <span class="Mono-Red">word<span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Purple">.</span><span class="Mono-Orange">+</span><span class="Mono-Green">iendo</span><span class="Mono-Black">&quot;</span></span> es, en realidad, <span class="Mono-Red">word<span class="Mono-Blue">=</span><span class="Mono-Black">&quot;^</span><span class="Mono-Purple">.</span><span class="Mono-Orange">+</span><span class="Mono-Green">iendo</span><span class="Mono-Black">$&quot;</span></span>. Hay un resumen de las expresiones regulares PCRE <a href="https://www.debuggex.com/cheatsheet/regex/pcre" target="_blank">aquí</a>.</p>
+<p class="Mono-Red">&nbsp;</p>
+<h3><a name="regex_character_classes" id="regex_character_classes"></a>Clases de caracteres</h3>
+<p>Además de los caracteres normales (e.g. <span class="Mono-Black">á</span>, <span class="Mono-Black">b</span>, <span class="Mono-Black">k</span>, <span class="Mono-Black">ñ</span>, <span class="Mono-Black">o</span>, <span class="Mono-Black">t</span>, <span class="Mono-Black">ü</span>, <span class="Mono-Black">z</span>), puedes utilizar las siguientes clases de caracteres especiales, en conjunto con los <a href="#regex_quantifiers">cuantificadores</a> que se detallan más abajo, para buscar patrones flexibles y complejos.</p>
+<table width="1033" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="129"><strong>CLASE</strong></td>
+    <td valign="top" width="508"><strong>SIGNIFICADO</strong></td>
+    <td valign="top" width="144"><strong>EJEMPLO</strong></td>
+    <td valign="top" width="252"><strong>RESULTADO</strong></td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black-Italics">cde</td>
+    <td valign="top">Caracteres normales. Son tratados como palabras o partes de palabras </td>
+    <td valign="top" class="Mono-Black">amiga</td>
+    <td valign="top" class="Mono-Purple">amiga</td>
+  </tr>
+  <tr>
+    <td valign="top"><span class="Mono-Purple">.</span></td>
+    <td valign="top">Cualquier carácter </td>
+    <td valign="top"><span class="Mono-Black">amig</span><span class="Mono-Purple">.</span></td>
+    <td valign="top"><span class="Mono-Black">amig</span><span class="Mono-Purple">a</span>, <span class="Mono-Black">amig</span><span class="Mono-Purple">b</span>, <span class="Mono-Black">amig</span><span class="Mono-Purple">c</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top"><span class="Mono-Purple">[</span><span class="Mono-Black-Italics">cde</span><span class="Mono-Purple">]</span></td>
+    <td valign="top">Cualquier carácter del conjunto en corchetes (aquí: <span class="Mono-Black-Italics">c</span>, <span class="Mono-Black-Italics">d</span> o <span class="Mono-Black-Italics">e</span>)</td>
+    <td valign="top" class="Mono-Black">amig<span class="Mono-Purple">[</span>ao<span class="Mono-Purple">]</span></td>
+    <td valign="top" class="Mono-Black">amig<span class="Mono-Purple">a</span>, amig<span class="Mono-Purple">o</span></td>
+  </tr>
+  <tr>
+    <td valign="top"><span class="Mono-Purple">[^</span><span class="Mono-Black-Italics">cde</span><span class="Mono-Purple">]</span></td>
+    <td valign="top">Cualquier carácter que <em>no</em> pertenezca al conjunto entre corchetes (aquí: <span class="Mono-Black-Italics">a</span>, <span class="Mono-Black-Italics">b</span>, <span class="Mono-Black-Italics">f</span>, <span class="Mono-Black-Italics">g</span>, etc.) </td>
+    <td valign="top"class="Mono-Black">ta<span class="Mono-Purple">[^</span>aeiou<span class="Mono-Purple">]</span>a</td>
+    <td valign="top"><span class="Mono-Black">ta</span><span class="Mono-Purple">b</span><span class="Mono-Black">a</span>, <span class="Mono-Black">ta</span><span class="Mono-Purple">c</span><span class="Mono-Black">a</span>, <span class="Mono-Black">ta</span><span class="Mono-Purple">d</span><span class="Mono-Black">a</span>, <span class="Mono-Black">ta</span><span class="Mono-Purple">f</span><span class="Mono-Black">a</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top"><span class="Mono-Purple">[</span><span class="Mono-Black-Italics">c</span><span class="Mono-Purple">-</span><span class="Mono-Black-Italics">e</span><span class="Mono-Purple">]</span></td>
+    <td valign="top">Cualquier carácter en el rango señalado (aquí: <span class="Mono-Black-Italics">c</span>, <span class="Mono-Black-Italics">d</span>, <span class="Mono-Black-Italics">e</span>) </td>
+    <td valign="top"class="Mono-Black"><span class="Mono-Purple">[</span>k<span class="Mono-Purple">-</span>n<span class="Mono-Purple">]</span>ama</td>
+    <td valign="top"><span class="Mono-Purple">k</span><span class="Mono-Black">ama</span>, <span class="Mono-Purple">l</span><span class="Mono-Black">ama</span>, <span class="Mono-Purple">m</span><span class="Mono-Black">ama</span>, <span class="Mono-Purple">n</span><span class="Mono-Black">ama</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top"><span class="Mono-Blue">(</span><span class="Mono-Black-Italics">c</span><span class="Mono-Purple">|</span><span class="Mono-Black-Italics">de</span><span class="Mono-Purple">|</span><span class="Mono-Black-Italics">fgh</span><span class="Mono-Blue">)</span></td>
+    <td valign="top">Cualquier carácter o grupo de caracteres entre paréntesis (aquí: <span class="Mono-Black-Italics">c</span>, <span class="Mono-Black-Italics">de</span>, <span class="Mono-Black-Italics">fgh</span>) </td>
+    <td valign="top" class="Mono-Black">amig<span class="Mono-Blue">(</span>a<span class="Mono-Purple">|</span>o<span class="Mono-Purple">|</span>ue<span class="Mono-Blue">)</span></td>
+    <td valign="top"><span class="Mono-Black">amig</span><span class="Mono-Purple">a</span>, <span class="Mono-Black">amig</span><span class="Mono-Purple">o</span>, <span class="Mono-Black">amig</span><span class="Mono-Purple">ue</span></td>
+  </tr>
+</table>
+<p>Nótese que todas estas expresiones se colocan dentro de una expresión de búsqueda, e.g. <span class="Mono-Black">[</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">amig</span><span class="Mono-Black"><span class="Mono-Purple">[</span></span><span class="Mono-Green">ao</span><span class="Mono-Black"><span class="Mono-Purple">]</span>&quot;]</span>.</p>
+<p>La clase de caracteres <span class="Mono-Purple">.</span> es particularmente útil al trabajar con la variable <span class="Mono-Red">pos</span>. Con ella, se pueden reemplazar todos los campos o posiciones en una etiqueta de categoría gramatical que no sean relevantes para la búsqueda. Así, por ejemplo, <span class="Mono-Black">[</span><span class="Mono-Red">pos</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">V</span><span class="Mono-Purple">...</span><span class="Mono-Green">3</span><span class="Mono-Purple">..</span><span class="Mono-Black">&quot;]</span> recoger todo tipo de verbos (principales, auxiliares, semiauxiliares), en todos los tiempos, modos y números, que estén conjugados en tercera persona. </p>
+<p>La clase de caracteres <span class="Mono-Purple">[^ ]</span> también puede ser muy útil para las búsquedas de etiquetas de categoría gramatical (<span class="Mono-Red">pos</span>) y otras cosas. Por ejemplo, para recoger todos los verbos <em>no</em> principales en el presente del indicativo <em>excepto</em> los que estén conjugados en tercera persona, se utiliza la siguiente expresión de búsqueda: <span class="Mono-Black">[</span><span class="Mono-Red">pos</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">V</span><span class="Mono-Purple">[^</span><span class="Mono-Green">M</span><span class="Mono-Purple">]</span><span class="Mono-Green">IP</span><span class="Mono-Purple">[^</span><span class="Mono-Green">3</span><span class="Mono-Purple">]..</span><span class="Mono-Black">&quot;]</span>.</p>
+<p>Las diversas clases de caracteres pueden usarse solos, con caracteres normales o con otras clases de caracteres. Cada una representa un único carácter o grupo de caracteres si no cuenta con un <a href="#regex_quantifiers">cuantificador</a>, de modo que <span class="Mono-Black">[</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">ca</span><span class="Mono-Purple">[</span><span class="Mono-Green">st</span><span class="Mono-Purple">]</span><span class="Mono-Green">a</span><span class="Mono-Black">&quot;]</span> recoge <span class="Mono-Black">casa</span> y <span class="Mono-Black">cata</span>, pero <em>no</em> <span class="Mono-Black">casta</span>. Para recoger estas tres palabras, se busca con <span class="Mono-Black">[</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Green">ca</span><span class="Mono-Purple">[</span><span class="Mono-Green">st</span><span class="Mono-Purple">]</span><span class="Mono-Orange">{</span><span class="Mono-Black">1</span><span class="Mono-Orange">,</span><span class="Mono-Black">2</span><span class="Mono-Orange">}</span><span class="Mono-Green">a</span><span class="Mono-Black">&quot;]</span> (el cuantificador de los corchetes se explica <a href="#regex_quantifiers">más abajo </a>). Nótese que esta búsqueda también recogería las palabras <span class="Mono-Black">cassa</span>, <span class="Mono-Black">catsa</span> y <span class="Mono-Black">catta</span>, si existieran en el texto fuente. </p>
+<p>&nbsp;</p>
+<h3><a name="regex_quantifiers" id="regex_quantifiers"></a>Cuantificadores</h3>
+<p>Los cuantificadores permiten especificar cuántas veces puede figurar el carácter, clase de caracteres o grupo (entre paréntesis) que está a la izquierda del cuantificador.</p>
+<table width="1056" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="162"><strong>CUANTIFICADOR</strong></td>
+    <td valign="top" width="388"><strong>SIGNIFICADO</strong></td>
+    <td valign="top" width="170"><strong>EJEMPLO</strong></td>
+    <td valign="top" width="336"><strong>RESULTADO</strong></td>
+  </tr>
+  <tr>
+    <td valign="top"class="Mono-Orange">?</td>
+    <td valign="top">0 o 1 instancias del ítem que está a la izquierda.</td>
+    <td valign="top" class="Mono-Black">caros<span class="Mono-Orange">?</span></td>
+    <td valign="top"><span class="Mono-Black">caro</span>, <span class="Mono-Black">caros</span></td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Orange">*</td>
+    <td valign="top">0 o más instancias del ítem que está a la izquierda.</td>
+    <td valign="top" class="Mono-Black"><span class="Mono-Blue">(</span>re<span class="Mono-Blue">)</span><span class="Mono-Orange">*</span>caro</td>
+    <td valign="top"><span class="Mono-Black">caro</span>, <span class="Mono-Black">recaro</span>, <span class="Mono-Black">rerecaro</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Orange">+</td>
+    <td valign="top">1 o más instancias del ítem que está a la izquierda.</td>
+    <td valign="top" class="Mono-Black">ca<span class="Mono-Orange">+</span>ro</td>
+    <td valign="top"><span class="Mono-Black">caro</span>, <span class="Mono-Black">caaro</span>, <span class="Mono-Black">caaaro</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Orange">{<span class="Mono-Black-Italics">n</span>}</td>
+    <td valign="top">Precisamente <em class="Mono-Black-Italics">n</em> instancias del ítem que está a la izquierda.</td>
+    <td valign="top" class="Mono-Black"><span class="Mono-Blue">(</span>re<span class="Mono-Blue">)</span><span class="Mono-Orange">{</span>2<span class="Mono-Orange">}</span>caro</td>
+    <td valign="top" class="Mono-Black">rerecaro</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Orange">{<span class="Mono-Black-Italics">n</span>,<span class="Mono-Black-Italics">m</span>}</td>
+    <td valign="top">Entre <em class="Mono-Black-Italics">n</em> y <em class="Mono-Black-Italics">m</em> instancias del ítem que está a la izquierda.</td>
+    <td valign="top" class="Mono-Black"><span class="Mono-Blue">(</span>re<span class="Mono-Blue">)</span><span class="Mono-Orange">{</span>2<span class="Mono-Orange">,</span>4<span class="Mono-Orange">}</span>caro</td>
+    <td valign="top"><span class="Mono-Black">rerecaro</span>, <span class="Mono-Black">rererecaro,</span> <span class="Mono-Black">rerererecaro</span> </td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<h3><a name="reserved_characters" id="reserved_characters"></a>Caracteres reservados</h3>
+<p>Los siguientes caracteres tienen significados especiales dentro de las expresiones de búsqueda.</p>
+<p class="Mono-Black">. ? * + | ( ) [ ] { } ^ $</p>
+<p> Para buscar alguno de estos caracteres, es necesario preponer un backslash (<span class="Mono-Orange">\</span>). Así, por ejemplo, [<span class="Mono-Black"></span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span> <span class="Mono-Orange">\</span><span class="Mono-Green">?</span><span class="Mono-Black">&quot;]</span> recogerá un único signo de interrogación, mientras que <span class="Mono-Black">[</span><span class="Mono-Red">word</span><span class="Mono-Blue">=</span><span class="Mono-Black">&quot;</span><span class="Mono-Orange">\</span><span class="Mono-Green">.</span><span class="Mono-Orange">+</span><span class="Mono-Black">&quot;]</span> recogerá uno o más puntos. A menos que estés buscando signos de puntuación, probablemente no vas a tener que preocuparte de los caracteres reservados. </p>
+<p>&nbsp;</p>
+<h2><a name="special_operators"></a>Operadores especiales</h2>
+<p>Existe un puñado de operadores especiales que operan por encima del nivel del token o &quot;slot&quot;.</p>
+<table width="1105" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="249"><strong>OPERADOR</strong></td>
+    <td valign="top" width="258"><strong>SIGNIFICADO</strong></td>
+    <td valign="top" width="265"><strong>EJEMPLO</strong></td>
+    <td valign="top" width="333"><strong>RESULTADO</strong></td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Orange">within s</td>
+    <td valign="top" >Lo que se busca debe ocurrir dentro de una oración (enunciado).</td>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">dijo</span>&quot;<span class="Mono-Magenta">%c</span>] [] [<span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">P</span>&quot;] [<span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">V</span>&quot;] <span class="Mono-Orange">within s</span></td>
+    <td valign="top"><span class="Mono-Black">dijo que me llamó</span><br>
+      <em>No recoge (</em><span class="Mono-Blue">//</span><em> = frontera de enunciado):</em><br>
+          <span class="Mono-Black">dijo . </span><span class="Mono-Blue">//</span><span class="Mono-Black"> Me llamó</span> </p> </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">&lt;<span class="Mono-Red">s_utterance</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">NÚMERO</span>&quot;&gt; <span class="Mono-Purple">[]</span> <span class="Mono-Orange">expand to</span> <span class="Mono-Red">s_utterance</span></p> </td>
+    <td valign="top">Mostrar el enunciado Nº <span class="Mono-Green">NÚMERO</span>.</td>
+    <td valign="top">&lt;<span class="Mono-Red">s_utterance</span> <span class="Mono-Blue">=</span> &quot;<span class="Mono-Green">12887</span>&quot;&gt; [] <span class="Mono-Orange">expand to</span> <span class="Mono-Red">s_utterance</span></td>
+    <td valign="top">La totalidad del enunciado Nº 12887. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">&lt;<span class="Mono-Red">s_utterance</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">NÚMERO</span>&quot;&gt; <span class="Mono-Purple">[]</span><span class="Mono-Orange">*</span> &lt;/<span class="Mono-Red">s_utterance</span>&gt;</td>
+    <td valign="top">Mostrar el enunciado Nº <span class="Mono-Green">NÚMERO</span>.</td>
+    <td valign="top"><span class="Mono-Black">&lt;<span class="Mono-Red">s_utterance</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">12887</span>&quot;&gt; <span class="Mono-Purple">[]</span><span class="Mono-Orange">*</span> &lt;/<span class="Mono-Red">s_utterance</span>&gt;</span></td>
+    <td valign="top">La totalidad del enunciado Nº 12887. Esta alternativa es más larga y lenta que la anterior, y puede tener problemas con los enunciados extremadamente largas. </td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<h2><a name="sample_queries" id="sample_queries"></a>Ejemplos de las búsquedas</h2>
+<table width="1064" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top" width="388"><strong>EXPRESIÓN DE BÚSQUEDA </strong></td>
+    <td valign="top" width="676"><strong>RESULTADO</strong></td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">estás</span>&quot;]</td>
+    <td><span class="Mono-Black">estás</span></td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">estás</span><span class="Mono-Orange">?</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">está</span>, <span class="Mono-Black">estás</span> </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">está</span><span class="Mono-Blue">(</span><span class="Mono-Green">s</span><span class="Mono-Blue">)</span><span class="Mono-Orange">?</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">está</span>, <span class="Mono-Black">estás</span></td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">está</span><span class="Mono-Blue">(</span><span class="Mono-Green">s</span><span class="Mono-Blue">|)</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">está</span>, <span class="Mono-Black">estás</span>. El valor vacío después de <span class="Mono-Blue">|</span> representa un campo vacío (es decir, nada). </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">está</span><span class="Mono-Blue">(</span><span class="Mono-Green">s</span><span class="Mono-Blue">|</span><span class="Mono-Green">n</span><span class="Mono-Blue">|)</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">está</span>, <span class="Mono-Black">estás</span>, <span class="Mono-Black">están</span> </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">está</span><span class="Mono-Blue">(</span><span class="Mono-Green">s</span><span class="Mono-Blue">|</span><span class="Mono-Green">n</span><span class="Mono-Blue">)</span><span class="Mono-Orange">?</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">está</span>, <span class="Mono-Black">estás</span>, <span class="Mono-Black">están</span></td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">estás</span>&quot;<span class="Mono-Magenta">%c</span>]</td>
+    <td valign="top" ><span class="Mono-Black">estás</span>, <span class="Mono-Black">Estás</span>, <span class="Mono-Black">ESTÁS</span>, <span class="Mono-Black">EsTáS</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">estás</span>&quot;<span class="Mono-Magenta">%d</span>]</td>
+    <td valign="top" ><span class="Mono-Black">estas</span>, <span class="Mono-Black">estás</span>, <span class="Mono-Black">éstas</span>, <span class="Mono-Black">éstás</span></td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">est</span><span class="Mono-Blue">(</span><span class="Mono-Green">a</span><span class="Mono-Blue">|</span><span class="Mono-Green">á</span><span class="Mono-Blue">)</span><span class="Mono-Green">s</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">estas</span>, <span class="Mono-Black">estás</span></td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">est</span><span class="Mono-Purple">[</span><span class="Mono-Green">aá</span><span class="Mono-Purple">]</span><span class="Mono-Green">s</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">estas</span>, <span class="Mono-Black">estás</span></td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Blue">(</span><span class="Mono-Green">e</span><span class="Mono-Blue">|</span><span class="Mono-Green">é</span><span class="Mono-Blue">)</span><span class="Mono-Green">st</span><span class="Mono-Blue">(</span><span class="Mono-Green">a</span><span class="Mono-Blue">|</span><span class="Mono-Green">á</span><span class="Mono-Blue">)</span><span class="Mono-Green">s</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">estas</span>, <span class="Mono-Black">estás</span>, <span class="Mono-Black">éstas</span>, <span class="Mono-Black">éstás</span></td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green"><span class="Mono-Purple">[</span>eé<span class="Mono-Purple">]</span>st</span><span class="Mono-Purple">[</span><span class="Mono-Green">aá</span><span class="Mono-Purple">]</span><span class="Mono-Green">s</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">estas</span>, <span class="Mono-Black">estás</span>, <span class="Mono-Black">éstas</span>, <span class="Mono-Black">éstás</span> </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">estás</span>&quot;<span class="Mono-Magenta">%cd</span>]</td>
+    <td valign="top" ><span class="Mono-Black">estas</span>, <span class="Mono-Black">estás</span>, <span class="Mono-Black">éstas</span>, <span class="Mono-Black">éstás</span>, <span class="Mono-Black">Estas</span>, <span class="Mono-Black">Estás</span>, <span class="Mono-Black">Éstas</span>, <span class="Mono-Black">Éstás</span>, <span class="Mono-Black">ESTAS</span>, <span class="Mono-Black">ESTÁS</span>, etc.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">estas</span>&quot;<span class="Mono-Magenta">%d</span> &amp; <span class="Mono-Red">spos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">PD</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">estas</span>, <span class="Mono-Black">éstas</span>, <span class="Mono-Black">éstás</span> (sólo si está etiquetado como un pronombre demostrativo) </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Purple">[</span><span class="Mono-Green">eé</span><span class="Mono-Purple">]</span><span class="Mono-Green">stas</span>&quot; &amp; <span class="Mono-Red">spos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">PD</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">estas</span>, <span class="Mono-Black">éstas</span> (sólo si está etiquetado como un pronombre demostrativo) </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Purple">[</span><span class="Mono-Green">eé</span><span class="Mono-Purple">]</span><span class="Mono-Green">stas</span>&quot;<span class="Mono-Magenta">%c</span> &amp; <span class="Mono-Red">spos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">PD</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">estas</span>, <span class="Mono-Black">éstas,</span> <span class="Mono-Black">Estas</span>, <span class="Mono-Black">Éstas</span>, <span class="Mono-Black">ESTAS</span>, <span class="Mono-Black">ÉSTAS</span>, etc. (sólo si está etiquetado como un pronombre demostrativo).</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">est</span><span class="Mono-Purple">.</span><span class="Mono-Green">s</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">estas</span>, <span class="Mono-Black">estás</span>, <span class="Mono-Black">estbs</span>, <span class="Mono-Black">estcs</span>, <span class="Mono-Black">estes</span>, <span class="Mono-Black">estés</span>, <span class="Mono-Black">estfs</span>, etc.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Blue">(</span><span class="Mono-Green">ben</span><span class="Mono-Blue">|</span><span class="Mono-Green">con</span><span class="Mono-Blue">|</span><span class="Mono-Green">des</span><span class="Mono-Blue">)</span><span class="Mono-Green">decir</span>&quot;]</td>
+    <td valign="top" >Cualquier alomorfo de <span class="Mono-Black">bendecir</span>, <span class="Mono-Black">condecir</span>, <span class="Mono-Black">desdecir</span>. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">esta</span><span class="Mono-Blue">(|</span><span class="Mono-Green">n</span><span class="Mono-Blue">|</span><span class="Mono-Green">s</span><span class="Mono-Blue">|</span><span class="Mono-Green">mos</span><span class="Mono-Blue">)</span>&quot;<span class="Mono-Magenta">%cd</span>]</td>
+    <td valign="top"><span class="Mono-Black">esta</span>, <span class="Mono-Black">está</span>, <span class="Mono-Black">estas</span>, <span class="Mono-Black">estás</span>, <span class="Mono-Black">estamos</span>, <span class="Mono-Black">están</span> además de las con distintas mezclas de mayúsculas y minúsculas. La primera <span class="Mono-Blue">|</span> no tiene nada a su izquierda, lo cual representa un campo vacío, es decir, nada. </td>
+  </tr>
+  
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">po</span><span class="Mono-Blue">(</span><span class="Mono-Green">c</span><span class="Mono-Blue">[</span><span class="Mono-Green">ao</span><span class="Mono-Blue">]|</span><span class="Mono-Green">qui</span><span class="Mono-Blue">(</span><span class="Mono-Green">t</span><span class="Mono-Blue">)</span><span class="Mono-Orange">?</span><span class="Mono-Blue">(</span><span class="Mono-Green">it</span><span class="Mono-Blue">|</span><span class="Mono-Green">ic</span><span class="Mono-Blue">|</span><span class="Mono-Green">ill</span><span class="Mono-Blue">)</span><span class="Mono-Orange">?</span><span class="Mono-Blue">(a|o)</span><span class="Mono-Orange">?</span><span class="Mono-Blue">)s</span><span class="Mono-Orange">?</span>&quot;<span class="Mono-Magenta">%cd</span>]</td>
+    <td valign="top"><span class="Mono-Black">poco</span>, <span class="Mono-Black">poquito</span>, <span class="Mono-Black">pocos</span>, <span class="Mono-Black">pocas</span>, <span class="Mono-Black">poca</span>, <span class="Mono-Black">poquitos</span>, <span class="Mono-Black">poquitito</span>, <span class="Mono-Black">poquitico</span>, <span class="Mono-Black">poquitillo</span>, <span class="Mono-Black">poquitas</span>, <span class="Mono-Black">poquita</span>, <span class="Mono-Black">poqui</span>, <span class="Mono-Black">poquitico</span>, <span class="Mono-Black">poquititas</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Blue">(</span><span class="Mono-Green">re</span><span class="Mono-Blue">)</span><span class="Mono-Orange">?</span><span class="Mono-Green">caro</span>&quot;]</td>
+    <td valign="top"><span class="Mono-Black">caro</span>, <span class="Mono-Black">recaro</span>. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Blue">(</span><span class="Mono-Green">re</span><span class="Mono-Blue">)</span><span class="Mono-Orange">*</span><span class="Mono-Green">caro</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">caro</span>, <span class="Mono-Black">recaro</span>, <span class="Mono-Black">rerecaro</span>, <span class="Mono-Black">rererecaro</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Blue">(</span><span class="Mono-Green">re</span><span class="Mono-Blue">)</span><span class="Mono-Orange">+</span><span class="Mono-Green">caro</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">recaro</span>, <span class="Mono-Black">rerecaro</span>, <span class="Mono-Black">rererecaro</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Blue">(</span><span class="Mono-Green">re</span><span class="Mono-Blue">)</span><span class="Mono-Orange">{</span>2<span class="Mono-Orange">,</span>4<span class="Mono-Orange">}</span><span class="Mono-Green">caro</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">rerecaro</span>, <span class="Mono-Black">rererecaro</span>, <span class="Mono-Black">rerererecaro</span>. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">ah</span><span class="Mono-Orange">+</span>&quot;]</td>
+    <td valign="top"><span class="Mono-Black">ah</span>, <span class="Mono-Black">ahh</span>, <span class="Mono-Black">ahhh</span>, <span class="Mono-Black">ahhhh</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">a</span><span class="Mono-Blue">(</span><span class="Mono-Green">h</span><span class="Mono-Blue">)</span><span class="Mono-Orange">+</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">ah</span>, <span class="Mono-Black">ahh</span>, <span class="Mono-Black">ahhh</span>, <span class="Mono-Black">ahhhh</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">ah</span><span class="Mono-Orange">{</span>1<span class="Mono-Orange">,</span>3<span class="Mono-Orange">}</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">ah</span>, <span class="Mono-Black">ahh</span>, <span class="Mono-Black">ahhh</span>.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Blue">(</span><span class="Mono-Green">ja</span><span class="Mono-Blue">)</span><span class="Mono-Orange">+</span>&quot;]</td>
+    <td valign="top" ><span class="Mono-Black">ja</span>, <span class="Mono-Black">jaja</span>, <span class="Mono-Black">jajaja</span>, <span class="Mono-Black">jajajaja</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">&lt;<span class="Mono-Red">s_utterance</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">12345</span>&quot;&gt; <span class="Mono-Purple">[]</span> <span class="Mono-Orange">expand to</span> <span class="Mono-Red">s_utterance</span></td>
+    <td valign="top">La totalidad del enunciado Nº 12345. </td>
+  </tr>
+  <tr>
+    <td class="Mono-Black">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">VMIP1S0</span>&quot;]</td>
+    <td>Cualquier verbo principal de 1ª persona singular del presente de indicativo. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">VMIP1</span><span class="Mono-Purple">.</span><span class="Mono-Green">0</span>&quot;]</td>
+    <td valign="top" ><p>Cualquier verbo principal de 1ª persona del presente de indicativo (singular o plural).</p>
+      </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">VMIP</span><span class="Mono-Purple">.</span><span class="Mono-Green">P0</span>&quot;]</td>
+    <td valign="top" >Cualquier verbo principal plural del presente de indicativo (1ª, 2ª o 3ª persona).</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">VMI</span><span class="Mono-Purple">.</span><span class="Mono-Green">1S0</span>&quot;]</td>
+    <td valign="top" ><p>Cualquier verbo principal de 1ª persona singular del indicativo (cualquier tiempo).</p>
+      </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">VM</span><span class="Mono-Purple">.</span><span class="Mono-Green">P1S0</span>&quot;]</td>
+    <td valign="top" >Cualquier verbo principal de 1ª persona singular del presente (cualquier modo verbal).</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">V</span><span class="Mono-Purple">.</span><span class="Mono-Green">IP1S0</span>&quot;]</td>
+    <td valign="top" >Cualquier verbo de 1ª persona singular del presente de indicativo (principal, auxiliar o semiauxiliar).</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">VMIP</span><span class="Mono-Purple">..</span><span class="Mono-Green">0</span>&quot;]</td>
+    <td valign="top" >Cualquier verbo principal del presente de indicativo (de cualquier persona y número).</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">V</span><span class="Mono-Purple">...</span><span class="Mono-Green">1S0</span>&quot;]</td>
+    <td valign="top" >Cualquier verbo de 1ª persona singular (de cualquier tipo, modo y tiempo). </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">V</span><span class="Mono-Purple">.</span><span class="Mono-Orange">{</span><span class="Mono-Green">3</span><span class="Mono-Orange">}</span><span class="Mono-Green">1S0</span>&quot;]</td>
+    <td valign="top" ><p>Cualquier verbo de 1ª persona singular (de cualquier tipo, modo y tiempo).</p>
+      </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">VMIP</span><span class="Mono-Purple">[^</span><span class="Mono-Green">2</span><span class="Mono-Purple">]</span><span class="Mono-Green">S0</span>&quot;]</td>
+    <td valign="top" >Cualquier verbo principal singular del presente de indicativo que no sea de 2ª persona. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">VM</span><span class="Mono-Purple">[^</span><span class="Mono-Green">I</span><span class="Mono-Purple">]</span><span class="Mono-Green">P1S0</span>&quot;]</td>
+    <td valign="top" >Cualquier verbo principal de 1ª persona singular del presente que no sea indicativo. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">VM</span><span class="Mono-Blue">(</span><span class="Mono-Green">I</span><span class="Mono-Blue">|</span><span class="Mono-Green">S</span><span class="Mono-Blue">|</span><span class="Mono-Green">M</span><span class="Mono-Blue">)</span><span class="Mono-Green">P2S0</span>&quot;]</td>
+    <td valign="top" >Cualquier verbo principal de 2ª persona singular del presente de indicativo, subjuntivo o imperativo. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">VM</span><span class="Mono-Purple">.</span><span class="Mono-Orange">+</span>&quot;]</td>
+    <td valign="top" >Cualquier verbo principal. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">VMI</span><span class="Mono-Purple">.</span><span class="Mono-Orange">+</span>&quot;]</td>
+    <td valign="top">Cualquier verbo principal del indicativo. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">NCFP000</span>&quot;]</td>
+    <td valign="top">Cualquier sustantivo común femenino plural. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">N.FS000</span>&quot;]</td>
+    <td valign="top">Cualquier sustantivo femenino plural (común o propio). </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">PP3C</span><span class="Mono-Purple">.</span><span class="Mono-Orange">+</span>&quot;]</td>
+    <td valign="top">Cualquier pronombre personal de tercera persona y género común. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">DP1</span><span class="Mono-Purple">.</span><span class="Mono-Orange">+</span>&quot;]</td>
+    <td valign="top">Cualquier determinante posesivo de primera persona. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">DD</span><span class="Mono-Purple">.</span><span class="Mono-Green">M</span><span class="Mono-Purple">..</span>&quot;]</td>
+    <td valign="top">Cualquier determinante demostrativo masculino. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">A</span><span class="Mono-Purple">.</span><span class="Mono-Green">S</span><span class="Mono-Purple">.</span><span class="Mono-Orange">+</span>&quot;]</td>
+    <td valign="top">Cualquier adjetivo superlativo. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">subtag</span><span class="Mono-Blue">!=</span>&quot;<span class="Mono-Green">aux</span>&quot;]</td>
+    <td valign="top">Cualquier verbo no auxiliar.</td>
+  </tr>
+  
+  <tr>
+    <td valign="top" class="Mono-Black">&nbsp;</td>
+    <td valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">comer</span><span class="Mono-Blue">|</span><span class="Mono-Green">tomar</span><span class="Mono-Blue">|</span><span class="Mono-Green">beber</span><span class="Mono-Blue">|</span><span class="Mono-Green">consumir</span>&quot; <span class="Mono-Blue">&amp;</span> <span class="Mono-Red">pos</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">V</span><span class="Mono-Purple">...</span><span class="Mono-Green">1S0</span>&quot;]</td>
+    <td valign="top">Cualquiera de los alomorfos de 1ª persona del indicativo de los verbos <span class="Mono-Black">comer</span>, <span class="Mono-Black">tomar</span>, <span class="Mono-Black">beber</span> y <span class="Mono-Black">consumir</span>.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Purple">.</span><span class="Mono-Orange">+</span><span class="Mono-Green">ear</span>&quot; <span class="Mono-Blue">&amp;</span> <span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">V</span>&quot;]</td>
+    <td valign="top">Cualquier verbo en <span class="Mono-Black">-ear</span>, e.g. <span class="Mono-Black">comiendo</span>, <span class="Mono-Black">peleó</span>, <span class="Mono-Black">cabreado</span>, <span class="Mono-Black">carreteábamos</span>. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">P</span>&quot; <span class="Mono-Blue">&amp;</span> <span class="Mono-Red">subtag</span><span class="Mono-Blue">!=</span>&quot;<span class="Mono-Green">pro</span><span class="Mono-Blue">|</span><span class="Mono-Green">ind</span>&quot;]</td>
+    <td valign="top">Cualquier pronombre excepto los indefinidos y desconocidos. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Purple">ser</span><span class="Mono-Green"></span>&quot; <span class="Mono-Blue">&amp;</span> <span class="Mono-Red">word</span><span class="Mono-Blue">!=</span>&quot;<span class="Mono-Green">ser|siendo|sido</span>&quot;]</td>
+    <td valign="top">Cualquier alomorfo de <span class="Mono-Black">ser</span> excepto <span class="Mono-Black">ser</span>, <span class="Mono-Black">siendo</span> y <span class="Mono-Black">sido</span>, e.g. <span class="Mono-Black">soy</span>, <span class="Mono-Black">fuiste</span>, <span class="Mono-Black">serán</span>. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">canto</span>&quot;<span class="Mono-Magenta">%c</span> <span class="Mono-Blue">&amp;</span> <span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">V</span>&quot;]</td>
+    <td valign="top">Todos los casos en que la palabra <span class="Mono-Black">canto</span>, <span class="Mono-Black">Canto</span>, <span class="Mono-Black">CANTO</span>, etc. es verbo.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">sub</span><span class="Mono-Purple">.</span><span class="Mono-Orange">+</span>&quot; <span class="Mono-Blue">&amp;</span> <span class="Mono-Red">Lema</span><span class="Mono-Blue">!=</span>&quot;<span class="Mono-Green">subir</span>&quot; <span class="Mono-Blue">&amp;</span> <span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">V</span>&quot;]</td>
+    <td valign="top">Cualquier verbo que comience con <span class="Mono-Black">sub</span> salvo <span class="Mono-Black">subir</span>, e.g. <span class="Mono-Black">subvencionas</span>, <span class="Mono-Black">subsistieron</span>, <span class="Mono-Black">sublevaste</span>.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">&nbsp;</td>
+    <td valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">de</span>&quot;] [<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">que</span>&quot;]</td>
+    <td valign="top">La frase <span class="Mono-Black">de que</span>.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">DE</span>&quot;] [<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">QUE</span>&quot;]</td>
+    <td valign="top">La frase <span class="Mono-Black">DE QUE</span>. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">de</span>&quot;<span class="Mono-Magenta">%c</span>] [<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">que</span>&quot;<span class="Mono-Magenta">%c</span>]</td>
+    <td valign="top">Las frases <span class="Mono-Black">de que</span>, <span class="Mono-Black">De Que</span>, <span class="Mono-Black">DE QUE</span>, <span class="Mono-Black">De QuE</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">a</span>&quot;<span class="Mono-Magenta">%c</span>] [<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">través</span>&quot;<span class="Mono-Magenta">%c</span>] [<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">de</span>&quot;<span class="Mono-Magenta">%c</span>]</td>
+    <td valign="top">Las frases <span class="Mono-Black">a través de</span>, <span class="Mono-Black">A Través De</span>, <span class="Mono-Black">A TRAVÉS DE</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">comer</span>&quot;] [<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">mucho</span>&quot;]</td>
+    <td valign="top">Cualquier frase compuesta de un alomorfo de <span class="Mono-Black">comer</span> y un alomorfo de <span class="Mono-Black">mucho</span>, e.g. <span class="Mono-Black">come mucho</span>, <span class="Mono-Black">comieron muchas</span>, <span class="Mono-Black">comiste mucha</span>, etc. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">cantar</span>&quot;<span class="Mono-Magenta">%c</span>] [<span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">R</span>&quot;]</td>
+    <td valign="top">Cualquier alomorfo de <span class="Mono-Black">cantar</span> seguido de cualquier adverbio. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Blue">(</span><span class="Mono-Green">se</span><span class="Mono-Blue">|</span><span class="Mono-Green">me</span><span class="Mono-Blue">|</span><span class="Mono-Green">le</span><span class="Mono-Blue">|</span><span class="Mono-Green">nos</span><span class="Mono-Blue">|</span><span class="Mono-Green">les</span><span class="Mono-Blue">)</span>&quot;<span class="Mono-Magenta">%c</span>] [<span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">V</span>&quot;] [<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">que</span>&quot;] </td>
+    <td valign="top"><span class="Mono-Black">se</span>, <span class="Mono-Black">me</span>, <span class="Mono-Black">le</span>, <span class="Mono-Black">nos</span> o <span class="Mono-Black">les</span> (sin distinguir entre mayúsculas y minúsculas) seguido inmediatamente de cualquier verbo y luego de la palabra <span class="Mono-Black">que</span>, e.g. <span class="Mono-Black">nos dijeron que</span>.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">se</span>&quot;<span class="Mono-Magenta">%c</span>] [<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">mandar</span>&quot;] [<span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">D</span>&quot;] [<span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">N</span>&quot;]</td>
+    <td valign="top"><span class="Mono-Black">se</span> o <span class="Mono-Black">Se</span> seguido de un alomorfo de <span class="Mono-Black">mandar</span>, un determinante y un sustantivo, e.g. <span class="Mono-Black">se mandó un condoro</span>. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">me</span>&quot;<span class="Mono-Magenta">%c</span>] [<span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">V</span>&quot;] [<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">un</span>&quot;] [<span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">N</span>&quot;] </td>
+    <td valign="top">Frases del tipo <span class="Mono-Black">me</span>, <span class="Mono-Black">Me</span>, <span class="Mono-Black">ME </span> + <span class="Default-Green">cualquier verbo</span> + <span class="Mono-Black">un</span> + <span class="Default-Green">cualquier sustantivo</span>. </td>
+  </tr>
+  <tr>
+    <td valign="top" class="Mono-Black">[<span class="Mono-Red">word</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">me</span>&quot;<span class="Mono-Magenta">%c</span>] [<span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">V</span>&quot;] []<span class="Mono-Orange">{</span>0<span class="Mono-Orange">,</span>4<span class="Mono-Orange">}</span> [<span class="Mono-Red">lemma=</span><span class="Mono-Blue"></span>&quot;<span class="Mono-Green">un</span>&quot;] [<span class="Mono-Red">tag</span><span class="Mono-Blue">=</span>&quot;<span class="Mono-Green">N</span>&quot;]</td>
+    <td valign="top">Frases del tipo <span class="Mono-Black">me</span>, <span class="Mono-Black">Me</span>, <span class="Mono-Black">ME</span> + <span class="Default-Green">cualquier verbo</span> + <span class="Default-Green">0-4 palabras de cualquier tipo</span> + <span class="Mono-Black">un</span> + <span class="Default-Green">cualquier sustantivo</span>. </td>
+  </tr>
+</table>
+<p>&nbsp; </p>
+<h2><a name="troubleshooting"></a>Resolución de problemas</h2>
+<p>Al hacer múltiples búsquedas, es común que el modo de búsqueda vuelva a su valor por defecto, Simple Query. Y cuando se realiza una búsqueda con la sintaxis de CQP Query en este modo, se arroja un error que va acompañado de un mensaje que se ve catastrófico. Así que al encontrarte con un error, confirma primero si usaste el modo de búsqueda correcto. </p>
+<p>Otra fuente común de errores es omitir uno o más corchetes.</p>
+<p>Otra causa común de errores es colocar los operadores en el lugar equivocado respecto de las comillas. Una búsqueda como <span class="Mono-Black"><strong>[</strong></span><span class="Estilo7"><strong><span class="Mono-Red">word</span><span class="Mono-Blue">=</span></strong></span><span class="Mono-Black"><strong>&quot;</strong></span><span class="Estilo7"><strong><span class="Mono-Green">perro</span></strong></span><span class="Mono-Black"><strong>&quot;</strong></span><span class="Estilo7"><strong><span class="Mono-Blue">|</span></strong></span><span class="Mono-Black"><strong>&quot;</strong></span><span class="Estilo7"><strong><span class="Mono-Green">gato</span></strong></span><span class="Mono-Black"><strong>&quot;]</strong></span> parece ser la manera correcta de encontrar cualquiera de estas palabras en un determinado &quot;slot&quot;, pero no funciona. La barra vertical <span class="Mono-Blue">|</span>y todos los valores deben colocarse dentro del mismo par de comillas, así: <span class="Mono-Black"><strong>[</strong></span><span class="Estilo7"><strong><span class="Mono-Red">word</span><span class="Mono-Blue">=</span></strong></span><span class="Mono-Black"><strong>&quot;</strong></span><span class="Estilo7"><strong><span class="Mono-Green">perro</span><span class="Mono-Blue">|</span><span class="Mono-Green">gato</span></strong></span><span class="Mono-Black"><strong>&quot;]</strong></span>.</p>
+<p class="Mono-Red">&nbsp;</p>
+</body>
+</html>
