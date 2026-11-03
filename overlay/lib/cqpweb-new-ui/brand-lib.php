@@ -2,7 +2,7 @@
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: personalization (site name, logo, icons, texts,
  * query defaults, public documentation pages) and the Help page links.
- * VERSION 1.0.2
+ * VERSION 1.0.3
  *
  * Settings live in CP_DATA_DIR/brand.json and CP_DATA_DIR/help.json; uploaded images in
  * CP_DATA_DIR/brand/ (served by cqpweb-new-ui-asset.php). Edited on the admin pages

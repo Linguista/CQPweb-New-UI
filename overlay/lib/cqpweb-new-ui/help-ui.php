@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: the Help page.
- * VERSION 1.0.2
+ * VERSION 1.0.3
  *
  *  - cp_help_page(): the public page help-center.php, linked from the bottom of every page;
  *  - cp_help_admin_card(): the "Help page" section of the admin Appearance page, where each

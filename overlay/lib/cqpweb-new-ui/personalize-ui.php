@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: the admin page "Personalization".
- * VERSION 1.0.2
+ * VERSION 1.0.3
  * Printed inside the admin control panel (adm/index.php?ui=cpPersonalize); saves through
  * adm/cqpweb-new-ui-act.php (actions "brandSave", "brandUpload" and "brandRemove").
  */

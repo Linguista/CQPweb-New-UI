@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: public view of the pages in the user pages folder.
- * VERSION 1.0.2
+ * VERSION 1.0.3
  * Reached as page.php?name=cqp-syntax-tutorial.html. No log-in needed. Shows the file inside the
  * site design, with the user-pages colors, like the tutorials inside the corpora.
  */

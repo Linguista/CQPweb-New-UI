@@ -1,6 +1,6 @@
 /*
  * cqpweb-new-ui: the admin Appearance page (adm/index.php?ui=appearance).
- * VERSION 1.0.2
+ * VERSION 1.0.3
  */
 (function () {
 	'use strict';

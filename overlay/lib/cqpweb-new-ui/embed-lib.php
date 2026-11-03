@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: showing embedded pages inside the site design.
- * VERSION 1.0.2
+ * VERSION 1.0.3
  *
  * CQPweb's "embedded pages" (admin control panel > Manage embedded pages) are whole HTML
  * files, such as the CQP syntax tutorials and the corpus documentation. CQPweb 3.3.19

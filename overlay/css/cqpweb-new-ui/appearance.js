@@ -1,6 +1,6 @@
 /*
  * cqpweb-new-ui: day/night switch for every CQPweb page.
- * VERSION 1.0.2
+ * VERSION 1.0.3
  * The mode is chosen before the page draws (inline script in <head>); this file
  * only wires up the button and remembers the visitor's choice in localStorage.
  */

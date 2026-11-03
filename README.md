@@ -1,6 +1,6 @@
 # cqpweb-new-ui
 
-VERSION 1.0.2
+VERSION 1.0.3
 
 A modern interface, confirmation e-mail workaround, and a set of fixes and additions for [CQPweb](https://cwb.sourceforge.io/cqpweb.php) 3.3.19, the web interface of the IMS Open Corpus Workbench. It installs over an existing CQPweb with one command, keeps a backup of everything it replaces, and can be removed the same way, meaning you can try it risk-free. If you want to check it out in action, go to https://corpora.pro/
 
@@ -181,6 +181,10 @@ The installer's `--data-dir`, `--font-dir`, `--pages-dir`, `--font-url` and `--p
 
 Pictures and PDFs used by the user pages are copied into the pages folder by hand and referred to by file name alone.
 
+## A site's own code
+
+A site that needs code of its own on every page (for example, something its own server setup relies on) can put it in `lib/cqpweb-new-ui/local-hooks.php`. If that file exists, it is run at the end of CQPweb's start-up on every page, before the maintenance-mode check, with `$Config` and `$User` set. The installer never writes, replaces or removes it, so it survives upgrades and removal; it checks its syntax on every installation. An error in it is written to the web server's error log and never stops the page.
+
 ## What it does not do
 
 - It never changes CQPweb's database or its configuration file.
@@ -233,6 +237,7 @@ The other files are new: `lib/cqpweb-new-ui/`, `css/cqpweb-new-ui/`, `adm/cqpweb
 
 ## Changelog
 
+- 1.0.3: a site's own code can be kept in `lib/cqpweb-new-ui/local-hooks.php`, run on every page and never touched by the installer.
 - 1.0.2: tested on a CQPweb 3.3.19 server with MySQL 8.0, Apache 2.4 and ModSecurity with the OWASP Core Rule Set. Fixed: saving the Help page's links with an entry missing from the request hid that entry; CQPweb's sign-up password check script (`jsc/useracct-create.js`) is now patched, so it no longer stops with an error; the links at the bottom of every page are centered (CQPweb gave them the width of its side menu); web-address fields are styled like the other fields; the test-message box no longer suggests the stand-in address CQPweb's setup script gives superusers; the installer is run with `python3`, since a download from GitHub does not keep its permission to run.
 - 1.0.1: the Personalization, E-mail, Maintenance mode and System messages pages, and the Help page section of the Appearance page, send their fields base64-encoded, so that saving them is not blocked by a web application firewall (ModSecurity with the OWASP rules reads links, tags and passwords in a request as an attack).
 - 1.0.0: first public release.

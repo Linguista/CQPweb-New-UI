@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: site rules.
- * VERSION 1.0.2
+ * VERSION 1.0.3
  *
  *  - maintenance mode: while it is on, only superusers can use CQPweb; everyone else
  *    sees a maintenance page (the log-in page stays open, so a superuser can log in);
@@ -14,6 +14,11 @@
  *
  * Maintenance settings live in CP_DATA_DIR/site.json and are edited on the admin page
  * "Maintenance mode" (lib/cqpweb-new-ui/site-ui.php).
+ *
+ * A site's own code: if lib/cqpweb-new-ui/local-hooks.php exists, it is run at the end of
+ * CQPweb's start-up on every page, before the maintenance check, with $Config and $User set.
+ * The installer never writes, replaces or removes that file. An error in it is logged and
+ * never stops the page.
  */
 
 require_once(__DIR__ . '/appearance-lib.php');
@@ -77,10 +82,28 @@ function cp_text_to_html(string $text) : string
  * ================
  */
 
-/** Called at the end of cqpweb_startup_environment(): stops everyone but superusers while maintenance mode is on. */
+/** Runs the site's own lib/cqpweb-new-ui/local-hooks.php, if there is one (see the top of this file). */
+function cp_local_hooks() : void
+{
+	$file = __DIR__ . '/local-hooks.php';
+	if (!is_file($file))
+		return;
+	try
+	{
+		require_once($file);
+	}
+	catch (\Throwable $e)
+	{
+		error_log('cqpweb-new-ui: local-hooks.php: ' . $e->getMessage() . ' (line ' . $e->getLine() . ')');
+	}
+}
+
+/** Called at the end of cqpweb_startup_environment(): runs the site's own code, then stops everyone but superusers while maintenance mode is on. */
 function cp_maintenance_gate() : void
 {
 	global $Config, $User;
+
+	cp_local_hooks();
 
 	if ('cli' == PHP_SAPI || !cp_site_settings()['maintenance'])
 		return;

@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: the admin Appearance page.
- * VERSION 1.0.2
+ * VERSION 1.0.3
  *
  * Printed inside the admin control panel (adm/index.php?ui=appearance).
  * All editing happens in the browser (css/cqpweb-new-ui/appearance-admin.js);

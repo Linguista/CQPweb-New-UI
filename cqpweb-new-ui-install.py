@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# VERSION 1.0.2
+# VERSION 1.0.3
 """
 cqpweb-new-ui-install.py: installs, upgrades or removes cqpweb-new-ui on a CQPweb 3.3.19 server.
 
@@ -13,7 +13,9 @@ What it does, in order (each step prints one line per file or folder):
      copies in the fonts and the two CQP syntax tutorials (never over existing files),
      and writes lib/cqpweb-new-ui/local-config.php when folders other than the defaults
      are chosen.
-  5. Builds the font list (cp-fonts.css) and checks the syntax of every installed PHP file.
+  5. Builds the font list (cp-fonts.css) and checks the syntax of every installed PHP file,
+     and of the site's own lib/cqpweb-new-ui/local-hooks.php if there is one. That file is
+     never written, replaced or removed.
 
 It never touches the database, CQPweb's configuration file, the web server's settings,
 the mail system, or any firewall or intrusion-prevention software.
@@ -36,7 +38,7 @@ import subprocess
 import sys
 import tarfile
 
-VERSION = '1.0.2'
+VERSION = '1.0.3'
 CQPWEB_VERSION = '3.3.19'
 PACKAGE = 'cqpweb-new-ui'
 DEFAULT_ROOT = '/var/www/html/cqpweb'
@@ -254,6 +256,10 @@ def install(a):
     elif os.path.exists(lc):
         say('KEPT', lc)
 
+    hooks = os.path.join(root, 'lib', PACKAGE, 'local-hooks.php')
+    if os.path.exists(hooks):
+        say('KEPT', f'{hooks} (the site\'s own code)')
+
     # 5. font list and syntax check
     if dry:
         say('DRY RUN', 'nothing was changed')
@@ -270,6 +276,9 @@ def install(a):
                     bad += 1
                     say('PHP ERR', f'{rel}: {r.stdout.strip()} {r.stderr.strip()}')
         say('PHP', f'{len([f for f in files if f.endswith(".php")]) - bad} files checked, {bad} with errors')
+        if os.path.exists(hooks):
+            r = subprocess.run(['php', '-l', hooks], capture_output=True, text=True)
+            say('PHP' if r.returncode == 0 else 'PHP ERR', f'{hooks}: ' + (r.stdout.strip() or r.stderr.strip()))
     else:
         say('NOTE', f'php was not found on the PATH: run as the web server\'s user: php {tool}')
     say('DONE', f'{len(create)} new, {len(replace)} replaced, {len(same)} already installed. Backup: {backup}')
@@ -322,6 +331,9 @@ def uninstall(a):
             say('REMOVE', rel)
             if not dry:
                 os.unlink(target)
+    hooks = os.path.join(root, 'lib', PACKAGE, 'local-hooks.php')
+    if os.path.exists(hooks):
+        say('LEFT', f'{os.path.relpath(hooks, root)} (the site\'s own code; never removed)')
     lc = os.path.join(root, 'lib', PACKAGE, 'local-config.php')
     if os.path.exists(lc):
         say('REMOVE', os.path.relpath(lc, root))

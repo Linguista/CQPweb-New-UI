@@ -1,6 +1,6 @@
 # cqpweb-new-ui-install_README.md
 
-Documents `cqpweb-new-ui-install.py` 1.0.2.
+Documents `cqpweb-new-ui-install.py` 1.0.3.
 
 ## Purpose
 
@@ -11,9 +11,9 @@ Installs cqpweb-new-ui over a CQPweb 3.3.19 server, upgrades it, or removes it. 
 3. copies the package's files into the CQPweb folder, with the owner and group of CQPweb's own files;
 4. creates the data folder and its subfolders, owned by the web server's user (folders that already exist keep their owner and permissions), and copies in the fonts and the two CQP syntax tutorials, never over files already there;
 5. writes `lib/cqpweb-new-ui/local-config.php` when folders other than the defaults are chosen;
-6. builds the font list (`cp-fonts.css`) as the web server's user and checks the syntax of every installed PHP file.
+6. builds the font list (`cp-fonts.css`) as the web server's user and checks the syntax of every installed PHP file, and of the site's own `lib/cqpweb-new-ui/local-hooks.php` if there is one.
 
-It never touches CQPweb's database or configuration file, the web server's settings, the mail system, or any firewall or intrusion-prevention software.
+It never writes, replaces or removes `lib/cqpweb-new-ui/local-hooks.php` (a site's own code; see the main README). It never touches CQPweb's database or configuration file, the web server's settings, the mail system, or any firewall or intrusion-prevention software.
 
 ## Usage
 
@@ -52,10 +52,10 @@ One line per file or folder, the tag first:
 | `SAME` | already the package's version; left as it is |
 | `MODIFIED` | differs both from CQPweb's original and from the package's version; the installer stops unless `--accept-modified` is given |
 | `FOLDER`, `FONT`, `PAGE` | created in the data folder |
-| `KEPT` | already there; not overwritten, owner and permissions unchanged |
+| `KEPT` | already there; not overwritten, owner and permissions unchanged (also shown for the site's own `local-hooks.php`) |
 | `CONFIG` | `local-config.php` written |
 | `BACKUP` | the backup archive |
-| `RESTORE`, `REMOVE`, `LEFT` | while uninstalling: a file put back, a package file removed, a package file left because it was changed after installation |
+| `RESTORE`, `REMOVE`, `LEFT` | while uninstalling: a file put back, a package file removed, a file left in place (a package file changed after installation, or the site's own `local-hooks.php`) |
 
 ## Backups
 
@@ -71,6 +71,7 @@ Linux, Python 3, standard library only. It must run on the server where CQPweb i
 
 ## Changelog
 
+- 1.0.3: shows the site's own `local-hooks.php` as kept, checks its syntax, and never removes it.
 - 1.0.2: version number only; the usage commands run the installer with `python3`, since a download from GitHub does not keep its permission to run.
 - 1.0.1: version number only (the package's admin pages changed; the installer did not).
 - 1.0.0: first version.

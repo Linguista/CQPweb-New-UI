@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: the home page.
- * VERSION 1.0.2
+ * VERSION 1.0.3
  *
  * Replaces the body of CQPweb's main page (lib/main-home-ui.php calls cp_home_page()
  * right after the environment starts). Shows the logo and welcome text, the log-in box

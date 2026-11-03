@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: the Appearance system.
- * VERSION 1.0.2
+ * VERSION 1.0.3
  *
  * Color palettes (12 presets, day and night), fonts, the top navigation bar
  * and the day/night switch for every CQPweb page. Settings are site-wide and
@@ -14,7 +14,7 @@
  *   lib/admin-home-ui.php  menu entry + ui=appearance -> cp_appearance_admin_ui()
  */
 
-const CP_APPEARANCE_VERSION = '1.0.2';
+const CP_APPEARANCE_VERSION = '1.0.3';
 
 require_once(__DIR__ . '/paths.php');
 require_once(__DIR__ . '/brand-lib.php');

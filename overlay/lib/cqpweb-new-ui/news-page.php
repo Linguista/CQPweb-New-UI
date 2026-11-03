@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: the public news page.
- * VERSION 1.0.2
+ * VERSION 1.0.3
  * Reached as news.php (relative to the CQPweb root). No log-in needed. The text is the file
  * CP_NEWS_FILE in the user pages folder, edited on the admin page "News page".
  */

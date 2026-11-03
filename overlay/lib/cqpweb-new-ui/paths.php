@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: where the package keeps its files.
- * VERSION 1.0.2
+ * VERSION 1.0.3
  *
  * Every other file of the package loads this one first. The installer writes
  * local-config.php beside it with the folders chosen at installation; any constant
@@ -17,7 +17,7 @@
  *   CP_PAGES_URL     the address of CP_TUTORIAL_DIR, as for CP_FONT_URL.
  */
 
-const CP_VERSION = '1.0.2';
+const CP_VERSION = '1.0.3';
 
 if (is_file(__DIR__ . '/local-config.php'))
 	require_once(__DIR__ . '/local-config.php');
