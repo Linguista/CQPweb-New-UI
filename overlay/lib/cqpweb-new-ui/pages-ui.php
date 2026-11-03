@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: the admin page "Edit user pages".
- * VERSION 1.0.3
+ * VERSION 1.0.4
  *
  * Lists the HTML files in the user pages folder (CP_TUTORIAL_DIR): the tutorials, the corpus
  * documentation, the tagset pages and any other embedded page. Each one can be opened and edited

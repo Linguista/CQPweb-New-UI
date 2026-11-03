@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-# VERSION 1.0.3
+# VERSION 1.0.4
 """
 cqpweb-new-ui-install.py: installs, upgrades or removes cqpweb-new-ui on a CQPweb 3.3.19 server.
 
 What it does, in order (each step prints one line per file or folder):
   1. Checks that the CQPweb folder holds CQPweb 3.3.19 and that the files the package
-     replaces are CQPweb's own originals (or this package's own copies, for an upgrade).
+     replaces are CQPweb's own originals, or the files of this or an earlier version of this
+     package (previous-versions.sha256), for an upgrade.
   2. Backs up every file it will replace into one archive in the backup folder.
   3. Copies the package's files into the CQPweb folder, with the owner and group of the
      CQPweb files already there.
@@ -38,7 +39,7 @@ import subprocess
 import sys
 import tarfile
 
-VERSION = '1.0.3'
+VERSION = '1.0.4'
 CQPWEB_VERSION = '3.3.19'
 PACKAGE = 'cqpweb-new-ui'
 DEFAULT_ROOT = '/var/www/html/cqpweb'
@@ -67,6 +68,22 @@ def read_sums(path):
             if line:
                 digest, name = line.split(None, 1)
                 out[name.lstrip('*')] = digest
+    return out
+
+
+def read_previous():
+    """Checksums of the files of earlier versions: {path: {sha256: version}}."""
+    out = {}
+    path = os.path.join(HERE, 'previous-versions.sha256')
+    if not os.path.exists(path):
+        return out
+    with open(path, encoding='utf-8') as f:
+        for line in f:
+            line = line.rstrip('\n')
+            if not line or line.startswith('#'):
+                continue
+            digest, name, version = line.split('  ')
+            out.setdefault(name, {})[digest] = version
     return out
 
 
@@ -129,9 +146,11 @@ def install(a):
     originals = read_sums(os.path.join(HERE, 'core-originals.sha256'))
     files = package_files()
     ours = {rel: sha256(os.path.join(HERE, 'overlay', rel)) for rel in files}
+    previous = read_previous()
 
     # 1. what is there now
     replace, create, same, modified = [], [], [], []
+    earlier = {}
     for rel in files:
         target = os.path.join(root, rel)
         if not os.path.exists(target):
@@ -141,6 +160,9 @@ def install(a):
         if now == ours[rel]:
             same.append(rel)
         elif rel in originals and now == originals[rel]:
+            replace.append(rel)
+        elif now in previous.get(rel, {}):
+            earlier[rel] = previous[rel][now]
             replace.append(rel)
         else:
             modified.append(rel)
@@ -176,8 +198,8 @@ def install(a):
     ref = os.stat(os.path.join(root, 'lib', 'environment.php'))
     for rel in files:
         target = os.path.join(root, rel)
-        tag = 'SAME' if rel in same else ('REPLACE' if rel in replace else 'NEW')
-        say(tag, rel)
+        tag = 'SAME' if rel in same else ('UPDATE' if rel in earlier else ('REPLACE' if rel in replace else 'NEW'))
+        say(tag, f'{rel} (from {earlier[rel]})' if rel in earlier else rel)
         if dry or rel in same:
             continue
         d = os.path.dirname(target)
@@ -308,10 +330,13 @@ def uninstall(a):
         if os.path.realpath(manifest['cqpweb_root']) != root:
             sys.exit(f'That backup was made for {manifest["cqpweb_root"]}, not {root}.')
         ours = {rel: sha256(os.path.join(HERE, 'overlay', rel)) for rel in package_files()}
+        previous = read_previous()
+        restored = set()
         for member in tar.getmembers():
             if not member.name.startswith('files/') or not member.isfile():
                 continue
             rel = member.name[len('files/'):]
+            restored.add(rel)
             target = os.path.join(root, rel)
             say('RESTORE', rel)
             if not dry:
@@ -321,11 +346,14 @@ def uninstall(a):
                     f.write(data)
                 os.chown(target, st.st_uid, st.st_gid)
                 os.chmod(target, 0o644)
-        for rel in manifest['created']:
+        # the files the first installation added, and those later versions added
+        added = list(manifest['created']) + [rel for rel in ours if rel not in restored and rel not in manifest['created']]
+        for rel in added:
             target = os.path.join(root, rel)
             if not os.path.exists(target):
                 continue
-            if rel in ours and sha256(target) != ours[rel]:
+            now = sha256(target)
+            if rel in ours and now != ours[rel] and now not in previous.get(rel, {}):
                 say('LEFT', f'{rel} (changed since installation)')
                 continue
             say('REMOVE', rel)

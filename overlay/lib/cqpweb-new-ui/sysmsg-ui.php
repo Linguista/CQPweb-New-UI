@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: the admin page "System messages", with editing.
- * VERSION 1.0.3
+ * VERSION 1.0.4
  *
  * Printed inside the admin control panel (adm/index.php?ui=systemMessages) in place of
  * CQPweb's own page, which could only add and delete messages. Here every message can also

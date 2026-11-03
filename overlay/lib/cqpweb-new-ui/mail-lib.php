@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: sending e-mail through an SMTP server.
- * VERSION 1.0.3
+ * VERSION 1.0.4
  *
  * CQPweb sends every message (account verification, password reset, username reminder,
  * notices) through send_cqpweb_email() in lib/general-lib.php, which calls PHP's mail().

@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: public corpus documentation pages.
- * VERSION 1.0.3
+ * VERSION 1.0.4
  * Reached as documentation.php?corpus=<slug> (relative to the CQPweb root). No log-in needed.
  * Which page documents which corpus is set on the Personalization page.
  */

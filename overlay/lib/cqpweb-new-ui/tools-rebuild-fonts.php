@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui: rebuilds cp-fonts.css in the font folder (CP_FONT_ROOT) from the fonts there.
- * VERSION 1.0.3
+ * VERSION 1.0.4
  * Usage, on the server, as the web server's user (www-data on Debian and Ubuntu, apache on Fedora):
  *   sudo -u www-data php /var/www/html/cqpweb/lib/cqpweb-new-ui/tools-rebuild-fonts.php
  */

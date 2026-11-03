@@ -1,6 +1,6 @@
 # cqpweb-new-ui
 
-VERSION 1.0.3
+VERSION 1.0.4
 
 A modern interface, confirmation e-mail workaround, and a set of fixes and additions for [CQPweb](https://cwb.sourceforge.io/cqpweb.php) 3.3.19, the web interface of the IMS Open Corpus Workbench. It installs over an existing CQPweb with one command, keeps a backup of everything it replaces, and can be removed the same way, meaning you can try it risk-free. If you want to check it out in action, go to https://corpora.pro/
 
@@ -86,6 +86,8 @@ _I say "apparent" because I'm not 100% sure that all of these issues were presre
 - When all database slots were busy, the database record just made was left behind, so the retry failed too.
 - The "location" label on the sign-up form was printed twice.
 - The query form's CQP syntax help link points to the current CQP Interface and Query Language Manual (PDF).
+- After signing up, the page only said "User account has been created". It now says that the account must first be activated with the link in the e-mail just sent, and to look in the spam folder if it does not arrive.
+- Opening an account activation link while logged in to another account showed "Sorry, but that is not a valid menu option", although the account had been activated. The result is now shown as a message on the account page.
 - Every link to another site uses `https` (except the CWB mailing list archive, which keeps the `http` address it is published at).
 
 ## Requirements
@@ -193,7 +195,7 @@ A site that needs code of its own on every page (for example, something its own 
 
 ## Upgrading
 
-Run the new version's installer the same way. Files that are still CQPweb's originals, or this version's own copies, are handled by themselves; files that differ from both are listed, and the installer stops until it is run again with `--accept-modified`. Every run makes a new backup.
+Run the new version's installer the same way. Files that are still CQPweb's originals, this version's own copies, or the copies of an earlier version of this package (their checksums are in `previous-versions.sha256`) are handled by themselves; files that differ from all of these are listed, and the installer stops until it is run again with `--accept-modified`. Every run makes a new backup. `--uninstall` still puts back CQPweb's originals from the first backup, and also removes the files that later versions added.
 
 ## Removing
 
@@ -222,7 +224,7 @@ This puts back CQPweb's original files from the first backup the installer made 
 | `lib/concordance-ui.php` | The Case-sensitive box and the bare-word conversion |
 | `lib/query-forms.php` | Default query type; tutorial box; CQP manual link |
 | `lib/query-home-ui.php` | "Tutorials" in the corpus menu |
-| `lib/useracct-act.php` | The password rule |
+| `lib/useracct-act.php` | The password rule; the message after signing up; account activation while logged in |
 | `lib/useracct-forms.php` | Sign-up notice, password rule text, doubled label |
 | `lib/info-forms.php` | Embedded pages shown in full; https links |
 | `jsc/useracct-create.js` | The sign-up form's password check works (it used an undefined variable) |
@@ -237,6 +239,7 @@ The other files are new: `lib/cqpweb-new-ui/`, `css/cqpweb-new-ui/`, `adm/cqpweb
 
 ## Changelog
 
+- 1.0.4: upgrading from an earlier version no longer needs `--accept-modified`: the installer recognizes the files of every earlier version, and `--uninstall` also removes files added by later versions. After signing up, the page says that the account must be activated with the link in the e-mail just sent; opening an activation link while logged in shows the result instead of "Sorry, but that is not a valid menu option".
 - 1.0.3: a site's own code can be kept in `lib/cqpweb-new-ui/local-hooks.php`, run on every page and never touched by the installer.
 - 1.0.2: tested on a CQPweb 3.3.19 server with MySQL 8.0, Apache 2.4 and ModSecurity with the OWASP Core Rule Set. Fixed: saving the Help page's links with an entry missing from the request hid that entry; CQPweb's sign-up password check script (`jsc/useracct-create.js`) is now patched, so it no longer stops with an error; the links at the bottom of every page are centered (CQPweb gave them the width of its side menu); web-address fields are styled like the other fields; the test-message box no longer suggests the stand-in address CQPweb's setup script gives superusers; the installer is run with `python3`, since a download from GitHub does not keep its permission to run.
 - 1.0.1: the Personalization, E-mail, Maintenance mode and System messages pages, and the Help page section of the Appearance page, send their fields base64-encoded, so that saving them is not blocked by a web application firewall (ModSecurity with the OWASP rules reads links, tags and passwords in a request as an attack).

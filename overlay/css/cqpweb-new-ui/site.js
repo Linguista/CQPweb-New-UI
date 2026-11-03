@@ -2,7 +2,7 @@
  * cqpweb-new-ui: Case-sensitive box and Match strategy row on the query forms, the live password checklist,
  * https links, American spelling in the text of CQPweb's own pages, deleting system messages
  * with their [x], and alternating word colors in concordances.
- * VERSION 1.0.3
+ * VERSION 1.0.4
  */
 (function () {
 	'use strict';

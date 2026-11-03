@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: the admin page "E-mail".
- * VERSION 1.0.3
+ * VERSION 1.0.4
  * Printed inside the admin control panel (adm/index.php?ui=cpMail); saves and sends the
  * test message through adm/cqpweb-new-ui-act.php (actions "mailSave" and "mailTest").
  */

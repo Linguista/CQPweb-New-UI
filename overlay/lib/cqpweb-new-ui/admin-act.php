@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: the actions of the package's admin pages.
- * VERSION 1.0.3
+ * VERSION 1.0.4
  *
  * Reached as adm/cqpweb-new-ui-act.php. Superuser only, POST only, same-site only.
  * Answers in JSON. Actions:

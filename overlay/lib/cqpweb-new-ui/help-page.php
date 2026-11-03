@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: the public Help page.
- * VERSION 1.0.3
+ * VERSION 1.0.4
  * Reached as /help-center.php (relative to the CQPweb root). No log-in needed.
  * Its links are set on the admin Appearance page (section "Help page").
  */

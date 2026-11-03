@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: site rules.
- * VERSION 1.0.3
+ * VERSION 1.0.4
  *
  *  - maintenance mode: while it is on, only superusers can use CQPweb; everyone else
  *    sees a maintenance page (the log-in page stays open, so a superuser can log in);

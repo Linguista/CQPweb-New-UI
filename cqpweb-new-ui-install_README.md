@@ -1,12 +1,12 @@
 # cqpweb-new-ui-install_README.md
 
-Documents `cqpweb-new-ui-install.py` 1.0.3.
+Documents `cqpweb-new-ui-install.py` 1.0.4.
 
 ## Purpose
 
 Installs cqpweb-new-ui over a CQPweb 3.3.19 server, upgrades it, or removes it. It:
 
-1. checks that the CQPweb folder holds CQPweb 3.3.19 and that the 14 files it replaces are CQPweb's originals (checksums in `core-originals.sha256`) or this package's own copies;
+1. checks that the CQPweb folder holds CQPweb 3.3.19 and that the 14 files it replaces are CQPweb's originals (checksums in `core-originals.sha256`) or the files of this version or of an earlier version of this package (checksums in `previous-versions.sha256`);
 2. backs up every file it replaces into one archive in the backup folder;
 3. copies the package's files into the CQPweb folder, with the owner and group of CQPweb's own files;
 4. creates the data folder and its subfolders, owned by the web server's user (folders that already exist keep their owner and permissions), and copies in the fonts and the two CQP syntax tutorials, never over files already there;
@@ -50,7 +50,8 @@ One line per file or folder, the tag first:
 | `NEW` | a file the package adds |
 | `REPLACE` | a CQPweb file replaced by the package's version |
 | `SAME` | already the package's version; left as it is |
-| `MODIFIED` | differs both from CQPweb's original and from the package's version; the installer stops unless `--accept-modified` is given |
+| `UPDATE` | a file of an earlier version of this package, replaced by this version's (the earlier version is shown) |
+| `MODIFIED` | differs from CQPweb's original and from the files of every version of this package; the installer stops unless `--accept-modified` is given |
 | `FOLDER`, `FONT`, `PAGE` | created in the data folder |
 | `KEPT` | already there; not overwritten, owner and permissions unchanged (also shown for the site's own `local-hooks.php`) |
 | `CONFIG` | `local-config.php` written |
@@ -71,6 +72,7 @@ Linux, Python 3, standard library only. It must run on the server where CQPweb i
 
 ## Changelog
 
+- 1.0.4: recognizes the files of earlier versions (`previous-versions.sha256`), so an upgrade no longer needs `--accept-modified`; shows them as `UPDATE`; `--uninstall` also removes files added by later versions.
 - 1.0.3: shows the site's own `local-hooks.php` as kept, checks its syntax, and never removes it.
 - 1.0.2: version number only; the usage commands run the installer with `python3`, since a download from GitHub does not keep its permission to run.
 - 1.0.1: version number only (the package's admin pages changed; the installer did not).

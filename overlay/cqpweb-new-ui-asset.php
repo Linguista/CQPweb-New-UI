@@ -1,7 +1,7 @@
 <?php
 /*
  * cqpweb-new-ui, an addition to CQPweb 3.3: serves the package's own files.
- * VERSION 1.0.3
+ * VERSION 1.0.4
  *
  *   cqpweb-new-ui-asset.php?f=fonts/<path>   a font or cp-fonts.css from CP_FONT_ROOT
  *   cqpweb-new-ui-asset.php?f=pages/<path>   an image, PDF or stylesheet from the user pages folder

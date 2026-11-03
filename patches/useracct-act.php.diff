@@ -20,7 +20,21 @@
  	if ($password == $new_username)
  		exiterror("Your password cannot be the same as your username!");
  	if ($password == $email)
-@@ -510,6 +514,10 @@
+@@ -342,7 +346,12 @@
+ 	if ($script_called_from_admin)
+ 		$next_location = "index.php?ui=showMessage&message=" . urlencode("User account '$new_username' has been created.");
+ 	else
+-		$next_location = "index.php?extraMsg=" . urlencode("User account '$new_username' has been created.");
++		/* cqpweb-new-ui: say that the account must be activated from the e-mail before it can be used */
++		$next_location = "index.php?extraMsg=" . urlencode('yes' == $verify_type
++			? "Your account '$new_username' has been created, but it cannot be used yet. "
++				. "An e-mail has been sent to $email with a link that activates it. "
++				. "Click that link, then log in. If the e-mail does not arrive within a few minutes, look in your spam folder."
++			: "User account '$new_username' has been created.");
+ 	
+ 	break;
+ 	
+@@ -510,6 +519,10 @@
  	/* Bad password checks */
  	if (empty($_GET['newPassword']))
  		exiterror("The password cannot be an empty string!");
@@ -31,3 +45,27 @@
  	if ($_GET['newPassword'] == $_GET['userForPasswordReset'])
  		exiterror("The password cannot be the same as the username!");
  	$info = get_user_info($_GET['userForPasswordReset']);
+@@ -842,6 +855,23 @@
+ }
+ 
+ 
++/* cqpweb-new-ui: CQPweb shows its account-activation screens only to visitors who are not logged in. Someone who
++ * is logged in when they open an activation link (an administrator trying out a new account, for example) got
++ * "Sorry, but that is not a valid menu option" instead, although the account had been activated. They now get the
++ * result as a message on their own account page. */
++if ('verifyUser' == $script_action && isset($next_location) && $User->logged_in
++	&& preg_match('/verifyScreenType=(\w+)/', $next_location, $verify_m))
++{
++	$verify_msg = [
++		'success' => "The account '" . ($the_username ?? '') . "' has been activated. You are still logged in as '{$User->username}'; log out to log in with the new account.",
++		'already' => 'That account had already been activated.',
++		'failure' => 'The account could not be activated: its activation key was not found. Log out, then ask for a new activation e-mail.',
++		'badlink' => 'The activation link could not be read. Log out, then enter the activation key by hand.',
++	][$verify_m[1]] ?? null;
++	if (null !== $verify_msg)
++		$next_location = 'index.php?ui=welcome&extraMsg=' . urlencode($verify_msg);
++}
++
+ if (isset($next_location))
+ 	set_next_absolute_location($next_location);
+ 
