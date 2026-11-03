@@ -2,7 +2,7 @@
 
 VERSION 1.0.2
 
-A modern interface, working e-mail, and a set of fixes for [CQPweb](https://cwb.sourceforge.io/cqpweb.php) 3.3.19, the web interface of the IMS Open Corpus Workbench. It installs over an existing CQPweb with one command, keeps a backup of everything it replaces, and can be removed the same way.
+A modern interface, confirmation e-mail workaround, and a set of fixes and additions for [CQPweb](https://cwb.sourceforge.io/cqpweb.php) 3.3.19, the web interface of the IMS Open Corpus Workbench. It installs over an existing CQPweb with one command, keeps a backup of everything it replaces, and can be removed the same way, meaning you can try it risk-free.
 
 Author: Scott Sadowsky.
 
