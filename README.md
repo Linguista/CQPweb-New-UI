@@ -1,5 +1,13 @@
 # cqpweb-new-ui
 
+![version](https://img.shields.io/badge/version-1.0.4-1f6feb)
+![license](https://img.shields.io/badge/license-GPL--2.0-2ea44f)
+![for](https://img.shields.io/badge/for-CQPweb%203.3.19-8250df)
+![needs](https://img.shields.io/badge/needs-PHP%208%20%7C%20Python%203-8250df)
+![works on](https://img.shields.io/badge/works%20on-desktop%20%7C%20phone-8250df)
+![themes](https://img.shields.io/badge/themes-day%20%7C%20night-d29922)
+[![demo](https://img.shields.io/badge/demo-corpora.pro-1f6feb)](https://corpora.pro/)
+
 VERSION 1.0.4
 
 A modern interface, confirmation e-mail workaround, and a set of fixes and additions for [CQPweb](https://cwb.sourceforge.io/cqpweb.php) 3.3.19, the web interface of the IMS Open Corpus Workbench. It installs over an existing CQPweb with one command, keeps a backup of everything it replaces, and can be removed the same way, meaning you can try it risk-free. If you want to check it out in action, go to https://corpora.pro/
